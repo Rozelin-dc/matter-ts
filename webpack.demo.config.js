@@ -46,7 +46,11 @@ License ${pkg.license}`;
                 'MatterBuild': resolve(
                     devServer ? buildPath : devPath
                 )
-            }
+            },
+            extensions: ['.ts', '.js']
+        },
+        module: {
+            rules: [{test: /\.ts$/, loader: 'ts-loader'}]
         },
         optimization: {
             minimize,
