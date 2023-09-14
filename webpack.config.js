@@ -18,7 +18,7 @@ module.exports = (env = {}) => {
     const resolve = relativePath => path.resolve(__dirname, relativePath);
 
     const banner =
-`${pkg.name} ${version} by @liabru
+`${pkg.name} ${version} by @Rozelin
 ${kind ? 'Experimental pre-release build.\n  ' : ''}${pkg.homepage}
 License ${pkg.license}${!minimize ? '\n\n' + license : ''}`;
 

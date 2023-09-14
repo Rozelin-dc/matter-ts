@@ -1,17 +1,16 @@
 {
-  "name": "matter-js",
-  "version": "0.19.0",
+  "name": "@rozelin/matter-ts",
+  "version": "0.0.0",
   "license": "MIT",
-  "homepage": "http://brm.io/matter-js/",
-  "author": "Liam Brummitt <liam@brm.io> (http://brm.io/)",
+  "author": "Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)",
   "description": "a 2D rigid body physics engine for the web",
   "main": "build/matter.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/liabru/matter-js.git"
+    "url": "https://github.com/Rozelin-dc/matter-ts.git"
   },
   "keywords": [
-    "javascript",
+    "typescript",
     "canvas",
     "html5",
     "physics",
