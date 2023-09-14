@@ -22,14 +22,14 @@ module.exports = (env = {}) => {
 
     const name = 'matter-demo';
     const banner =
-`${name} bundle ${version} by @liabru
+`${name} bundle ${version} by @Rozelin
 ${pkg.homepage}
 License ${pkg.license}`;
 
     return {
         entry: { [name]: './demo/src/index.js' },
         node: false,
-        devtool: devServer ? false : 'none',
+        devtool: false,
         output: {
             library: 'MatterDemo',
             libraryTarget: 'umd',
@@ -96,12 +96,15 @@ License ${pkg.license}`;
             openAnalyzer: true
         })] : []),
         devServer: {
-            contentBase: [resolve('./demo')],
-            watchContentBase: true,
             hot: false,
             compress: true,
-            overlay: true,
-            port: 8000
+            port: 8000,
+            client: {
+                overlay: true
+            },
+            static: {
+                directory: resolve('./demo')
+            }
         }
     };
 };
