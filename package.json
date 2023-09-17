@@ -19,6 +19,7 @@
     "rigid body physics"
   ],
   "devDependencies": {
+    "@types/lodash": "^4.14.198",
     "conventional-changelog-cli": "^4.1.0",
     "eslint": "^8.49.0",
     "html-webpack-plugin": "^5.5.3",
@@ -67,5 +68,8 @@
     "src",
     "build",
     "CHANGELOG.md"
-  ]
+  ],
+  "dependencies": {
+    "lodash": "^4.17.21"
+  }
 }
