@@ -16,7 +16,7 @@ module.exports = (env = {}) => {
     const sizeThreshold = 600 * 1024;
 
     const publicPath = devServer ? '/' : './js';
-    const devPath = './src/module/main.ts';
+    const devPath = './src/matter.ts';
     const buildPath = './build/matter.js';
     const resolve = relativePath => path.resolve(__dirname, relativePath);
 
