@@ -23,7 +23,7 @@ ${kind ? 'Experimental pre-release build.\n  ' : ''}${pkg.homepage}
 License ${pkg.license}${!minimize ? '\n\n' + license : ''}`;
 
     return {
-        entry: { 'matter': './src/module/main.js' },
+        entry: { 'matter': './src/module/main.ts' },
         node: false,
         output: {
             library: 'Matter',
