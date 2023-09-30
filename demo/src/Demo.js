@@ -14,8 +14,8 @@ var MatterTools = require('matter-tools');
 var demo = function(examples, isDev) {
     var demo = MatterTools.Demo.create({
         toolbar: {
-            title: 'matter-js' + (isDev ? ' ・ dev' : ''),
-            url: 'https://github.com/liabru/matter-js',
+            title: 'matter-ts' + (isDev ? ' ・ dev' : ''),
+            url: 'https://github.com/Rozelin-dc/matter-ts',
             reset: true,
             source: true,
             inspector: true,
@@ -38,7 +38,7 @@ var demo = function(examples, isDev) {
     window.MatterDemoInstance = demo;
 
     document.body.appendChild(demo.dom.root);
-    document.title = 'Matter.js Demo' + (isDev ? ' ・ Dev' : '');
+    document.title = 'Matter.ts Demo' + (isDev ? ' ・ Dev' : '');
 
     if (isDev) {
         // add compare button
@@ -69,11 +69,11 @@ var demo = function(examples, isDev) {
 
             if (isBackKey || isForwardKey) {
                 var direction = isBackKey ? -1 : 1,
-                    currentExampleIndex = demo.examples.findIndex(function(example) { 
+                    currentExampleIndex = demo.examples.findIndex(function(example) {
                         return example.id === demo.example.id;
                     }),
                     nextExample = demo.examples[(demo.examples.length + currentExampleIndex + direction) % demo.examples.length];
-                
+
                 MatterTools.Demo.setExample(demo, nextExample);
             }
         });

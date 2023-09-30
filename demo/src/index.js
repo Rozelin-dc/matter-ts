@@ -9,7 +9,7 @@
 * @module Index
 */
 
-var Matter = require('matter-js');
+var Matter = require('matter-ts');
 var Examples = require('../../examples/index');
 var compare = require('./Compare').compare;
 var demo = require('./Demo').demo;
@@ -24,7 +24,7 @@ var examples = Matter.Common.keys(Examples).map(function(id){
     return {
         id: id,
         sourceLink: 'https://github.com/liabru/matter-js/blob/master/examples/' + id + '.js',
-        name: Examples[id].title, 
+        name: Examples[id].title,
         init: Examples[id]
     };
 });

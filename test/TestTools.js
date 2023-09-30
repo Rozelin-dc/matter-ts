@@ -44,14 +44,14 @@ const comparisonReport = (capturesDev, capturesBuild, devSize, buildSize, buildV
                     intrinsicChangeCount += 1;
                 }
             }
-            
+
             return { name };
         })
         .sort((a, b) => a.name.localeCompare(b.name));
 
     const report = (breakEvery, format) => [
         [`Output comparison of ${behaviourSimilarityEntries.length}`,
-         `examples against previous release ${format('matter-js@' + buildVersion, colors.Yellow)}`
+         `examples against previous release ${format('matter-ts@' + buildVersion, colors.Yellow)}`
         ].join(' '),
 
         `\n\n${format('Behaviour  ', colors.White)}`,
@@ -193,24 +193,24 @@ const serialize = (obj, exclude=()=>false, precision=4, path='$', visited=[], pa
             (item, index) => serialize(item, exclude, precision, path + '.' + index, visited, paths)
         );
     }
-  
+
     const visitedIndex = visited.indexOf(obj);
-  
+
     if (visitedIndex !== -1) {
       return paths[visitedIndex];
     }
-  
+
     visited.push(obj);
     paths.push(path);
-  
+
     const result = {};
-  
+
     for (const key of Object.keys(obj).sort()) {
       if (!exclude(key, obj[key], path + '.' + key)) {
         result[key] = serialize(obj[key], exclude, precision, path + '.' + key, visited, paths);
       }
     }
-  
+
     return result;
 };
 
@@ -243,7 +243,7 @@ const logReport = (captures, version) => {
         }
     }
 
-    return `Output logs from ${color(version, colors.Yellow)} build on last run\n\n` 
+    return `Output logs from ${color(version, colors.Yellow)} build on last run\n\n`
         + (report ? report : '  None\n');
 };
 

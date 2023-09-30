@@ -7,7 +7,7 @@ const { requireUncached, serialize } = require('./TestTools');
 const consoleOriginal = global.console;
 
 const runExample = options => {
-  const { 
+  const {
     Matter,
     logs,
     frameCallbacks
@@ -36,7 +36,7 @@ const runExample = options => {
       runner = example.runner;
       engine = example.engine;
       render = example.render;
-      
+
       for (j = 0; j < options.updates; j += 1) {
         const time = j * runner.delta;
         const callbackCount = frameCallbacks.length;
@@ -129,13 +129,13 @@ const prepareMatter = (options) => {
 
   if (options.jitter) {
     Matter.after('Body.create', function() {
-      Matter.Body.applyForce(this, this.position, { 
-        x: Math.cos(this.id * this.id) * options.jitter * this.mass, 
+      Matter.Body.applyForce(this, this.position, {
+        x: Math.cos(this.id * this.id) * options.jitter * this.mass,
         y: Math.sin(this.id * this.id) * options.jitter * this.mass
       });
     });
   }
-  
+
   return Matter;
 };
 
@@ -168,14 +168,14 @@ const prepareEnvironment = options => {
 
   global.Image = function Image() { };
 
-  global.console = { 
+  global.console = {
     log: (...args) => {
       logs.push(args.join(' '));
     }
   };
 
   const Matter = prepareMatter(options);
-  mock('matter-js', Matter);
+  mock('matter-ts', Matter);
   global.Matter = Matter;
 
   return {
@@ -213,7 +213,7 @@ const captureExtrinsics = ({ world }, Matter) => ({
 
       try {
         positionA = Matter.Constraint.pointAWorld(constraint);
-      } catch (err) { 
+      } catch (err) {
         positionA = { x: 0, y: 0 };
       }
 
@@ -245,8 +245,8 @@ const captureIntrinsics = ({ world }, Matter) => serialize({
   }, {}),
   composites: Matter.Composite.allComposites(world).reduce((composites, composite) => {
       composites[composite.id] = {
-          bodies: Matter.Composite.allBodies(composite).map(body => body.id), 
-          constraints: Matter.Composite.allConstraints(composite).map(constraint => constraint.id), 
+          bodies: Matter.Composite.allBodies(composite).map(body => body.id),
+          constraints: Matter.Composite.allConstraints(composite).map(constraint => constraint.id),
           composites: Matter.Composite.allComposites(composite).map(composite => composite.id)
       };
       return composites;
@@ -262,15 +262,15 @@ const intrinsicProperties = [
   'bodies', 'constraints', 'composites',
 
   // Common
-  'id', 'label', 
+  'id', 'label',
 
   // Constraint
   'angularStiffness', 'bodyA', 'bodyB', 'damping', 'length', 'stiffness',
 
   // Body
-  'area', 'collisionFilter', 'category', 'mask', 'group', 'density', 'friction', 
-  'frictionAir', 'frictionStatic', 'inertia', 'inverseInertia', 'inverseMass', 
-  'isSensor', 'isSleeping', 'isStatic', 'mass', 'parent', 'parts', 'restitution', 
+  'area', 'collisionFilter', 'category', 'mask', 'group', 'density', 'friction',
+  'frictionAir', 'frictionStatic', 'inertia', 'inverseInertia', 'inverseMass',
+  'isSensor', 'isSleeping', 'isStatic', 'mass', 'parent', 'parts', 'restitution',
   'sleepThreshold', 'slop', 'timeScale',
 
   // Composite
@@ -308,7 +308,7 @@ const excludeStateProperties = [
   'timestampElapsedHistory',
 ].concat(extrinsicProperties);
 
-const collisionId = (collision) => 
+const collisionId = (collision) =>
   Math.min(collision.bodyA.id, collision.bodyB.id) + Math.max(collision.bodyA.id, collision.bodyB.id) * 10000;
 
 const collisionCompareId = (collisionA, collisionB) => collisionId(collisionA) - collisionId(collisionB);

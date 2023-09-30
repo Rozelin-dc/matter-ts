@@ -1,7 +1,7 @@
 /**
 * A Matter.js version comparison testbed based on MatterTools.
 *
-* Tool to interactively compare engine results of 
+* Tool to interactively compare engine results of
 * development version against the previous release.
 *
 * USAGE: [host]?compare[=frames]#[example]
@@ -18,8 +18,8 @@ var compare = function(examples, isDev) {
     // create primary demo for dev build
     var demo = MatterTools.Demo.create({
         toolbar: {
-            title: 'matter-js ・ ' + (isDev ? 'dev' : '') + ' ・ comparing to ' + MatterBuild.version,
-            url: 'https://github.com/liabru/matter-js',
+            title: 'matter-ts ・ ' + (isDev ? 'dev' : '') + ' ・ comparing to ' + MatterBuild.version,
+            url: 'https://github.com/Rozelin-dc/matter-ts',
             reset: true,
             source: true,
             inspector: false,
@@ -43,7 +43,7 @@ var compare = function(examples, isDev) {
     // create secondary demo for release build
     var demoBuild = MatterTools.Demo.create({
         toolbar: {
-            title: 'matter-js-compare-build',
+            title: 'matter-ts-compare-build',
             reset: false,
             source: false,
             inspector: false,
@@ -61,8 +61,8 @@ var compare = function(examples, isDev) {
         resetOnOrientation: true,
         routing: false,
         startExample: false,
-        examples: examples.map(function(example) { 
-            return Matter.Common.extend({}, example); 
+        examples: examples.map(function(example) {
+            return Matter.Common.extend({}, example);
         })
     });
 
@@ -104,12 +104,12 @@ var compare = function(examples, isDev) {
 
             if (ticks >= maxTicks) {
                 console.info(
-                    'Demo.Compare: ran ' + ticks + ' ticks, timestamp is now ' 
+                    'Demo.Compare: ran ' + ticks + ' ticks, timestamp is now '
                         + engine.timing.timestamp.toFixed(2)
                 );
 
                 ticks = -1;
-                    
+
                 return;
             }
 
@@ -140,7 +140,7 @@ var compare = function(examples, isDev) {
         MatterTools.Demo._setExample(
             demoBuild, demoBuild.examples.find(function(e) { return e.name === example.name; })
         );
-            
+
         window.Matter = MatterDev;
     };
 
@@ -162,11 +162,11 @@ var compare = function(examples, isDev) {
 
     MatterTools.Demo.start(demo);
 
-    document.title = 'Matter.js Compare' + (isDev ? ' ・ Dev' : '');
+    document.title = 'Matter.ts Compare' + (isDev ? ' ・ Dev' : '');
 
     console.info(
-        'Demo.Compare: matter-js@' + MatterDev.version + 
-        ' with matter-js@' + MatterBuild.version
+        'Demo.Compare: matter-ts@' + MatterDev.version +
+        ' with matter-ts@' + MatterBuild.version
     );
 };
 
