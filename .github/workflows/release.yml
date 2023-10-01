@@ -1,0 +1,63 @@
+name: Publish Package
+
+on:
+  release:
+    tags:
+      - '*.*.*'
+    branches-ignore:
+      - '**'
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: 'publish'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - run: |
+          git config user.name  "actions-user"
+          git config user.email "action@github.com"
+          git pull
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - name: Set version
+        run: echo VERSION=$(echo ${GITHUB_REF:10}) >> $GITHUB_ENV
+      - run: npm version ${{ env.VERSION }}
+      - run: npm run build
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: |
+          git add .
+          git commit -m "build"
+          git push
+
+  typedoc:
+    runs-on: ubuntu-latest
+    needs: [deploy]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm run typedoc
+      - uses: actions/upload-pages-artifact@v2
+        with:
+          path: ./docs
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v2
