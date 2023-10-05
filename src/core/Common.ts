@@ -425,11 +425,11 @@ export default class Common {
       let lastResult: any
       const args = new Array(arguments.length)
 
-      for (var i = 0, l = arguments.length; i < l; i++) {
+      for (let i = 0, l = arguments.length; i < l; i++) {
         args[i] = arguments[i]
       }
 
-      for (i = 0; i < funcs.length; i += 1) {
+      for (let i = 0; i < funcs.length; i += 1) {
         const result: any = funcs[i].apply(lastResult, args)
 
         if (typeof result !== 'undefined') {
