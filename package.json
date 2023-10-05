@@ -2,6 +2,7 @@
   "name": "@rozelin/matter-ts",
   "version": "0.0.0",
   "license": "MIT",
+  "homepage": "https://github.com/Rozelin-dc/matter-tools",
   "author": "Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)",
   "description": "a 2D rigid body physics engine for the web",
   "main": "build/matter.js",
@@ -20,6 +21,10 @@
     "rigid body physics"
   ],
   "devDependencies": {
+    "@babel/core": "^7.23.0",
+    "@babel/preset-env": "^7.22.20",
+    "@babel/preset-typescript": "^7.23.0",
+    "babel-jest": "^29.7.0",
     "conventional-changelog-cli": "^4.1.0",
     "eslint": "^8.49.0",
     "html-webpack-plugin": "^5.5.3",
@@ -51,7 +56,9 @@
     "build-dev": "webpack --mode=production",
     "build-demo": "rm -rf ./demo/js && webpack --config webpack.demo.config.js --mode=production && webpack --config webpack.demo.config.js --mode=production",
     "lint": "eslint 'src/**/*.ts' 'demo/src/**/*.js' 'examples/*.js' 'webpack.*.js'",
-    "typedoc": "typedoc --out docs src/**/*.ts"
+    "typedoc": "typedoc --out docs src/**/*.ts",
+    "type-check": "tsc --noEmit",
+    "test": "jest"
   },
   "files": [
     "src",
