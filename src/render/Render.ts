@@ -332,7 +332,7 @@ export default class Render {
    */
   public static create(
     options: Partial<Omit<IRender, 'options'>> & {
-      options?: IRenderOptions
+      options?: Partial<IRenderOptions>
     } = {}
   ): IRender {
     const defaults: Omit<
@@ -1152,7 +1152,6 @@ export default class Render {
     bodies: IBody[],
     context: CanvasRenderingContext2D
   ): void {
-    const engine = render.engine
     const options = render.options
     const showInternalEdges = options.showInternalEdges || !options.wireframes
 
