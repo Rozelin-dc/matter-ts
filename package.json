@@ -24,6 +24,8 @@
     "@babel/core": "^7.23.0",
     "@babel/preset-env": "^7.22.20",
     "@babel/preset-typescript": "^7.23.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
     "babel-jest": "^29.7.0",
     "conventional-changelog-cli": "^4.1.0",
     "eslint": "^8.49.0",
@@ -55,7 +57,7 @@
     "build-alpha": "webpack --mode=production",
     "build-dev": "webpack --mode=production",
     "build-demo": "rm -rf ./demo/js && webpack --config webpack.demo.config.js --mode=production && webpack --config webpack.demo.config.js --mode=production",
-    "lint": "eslint 'src/**/*.ts' 'demo/src/**/*.js' 'examples/*.js' 'webpack.*.js'",
+    "lint": "eslint \"src/**/*.ts\"",
     "typedoc": "typedoc --out docs src/**/*.ts",
     "type-check": "tsc --noEmit",
     "test": "jest"
