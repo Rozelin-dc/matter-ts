@@ -2,7 +2,7 @@ import Body, { IBody } from '../body/Body'
 import Composite from '../body/Composite'
 import { IPair } from '../collision/Pair'
 import { IConstraint } from '../constraint/Constraint'
-import Common, { DeepPartial } from '../core/Common'
+import Common from '../core/Common'
 import Engine, { IEngine } from '../core/Engine'
 import Events, { RenderEventFunction, RenderEventName } from '../core/Events'
 import Mouse, { IMouse } from '../core/Mouse'
@@ -300,6 +300,7 @@ interface IRenderTiming {
 interface IInspector {
   selected: { data: IBody | IConstraint }[]
   render: IRender
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectStart: any
   selectBounds: IBounds
 }
@@ -312,6 +313,7 @@ interface IInspector {
 export default class Render {
   protected static _requestAnimationFrame =
     window?.requestAnimationFrame ??
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ((callback: (time: number) => any) => {
       window.setTimeout(function () {
         callback(Common.now())
@@ -533,6 +535,7 @@ export default class Render {
    */
   public static lookAt(
     render: IRender,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     objects: any | any[],
     padding: IVector = Vector.create(0, 0),
     center: boolean = true
@@ -1824,7 +1827,7 @@ export default class Render {
 
       switch (item.type) {
         case 'body':
-          // render body selections
+        // render body selections
           const bounds = item.bounds
           context.beginPath()
           context.rect(
@@ -1839,7 +1842,7 @@ export default class Render {
           break
 
         case 'constraint':
-          // render constraint selections
+        // render constraint selections
           let point = item.pointA
           if (item.bodyA) {
             point = item.pointB

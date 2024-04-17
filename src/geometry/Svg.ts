@@ -67,6 +67,7 @@ export default class Svg {
       }
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const addSegmentPoint = (segment: any) => {
       const segType = segment.pathSegTypeAsLetter.toUpperCase()
 
@@ -143,6 +144,7 @@ export default class Svg {
       }
 
       // increment by sample value
+      // eslint-disable-next-line no-global-assign
       length += sampleLength
     }
 

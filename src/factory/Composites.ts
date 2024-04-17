@@ -462,7 +462,7 @@ export default class Composites {
   }
 }
 
-;(() => {
+(() => {
   Common.deprecated(
     Composites as Object as Record<string, Function>,
     'newtonsCradle',

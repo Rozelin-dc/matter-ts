@@ -5,8 +5,10 @@ import Grid, { IGrid } from '../collision/Grid'
 import Pairs, { IPairs } from '../collision/Pairs'
 import Resolver from '../collision/Resolver'
 import Constraint from '../constraint/Constraint'
+import { IRender } from '../render/Render'
 import Common, { DeepPartial } from './Common'
 import Events, { EngineEventFunction, EngineEventName } from './Events'
+import { IMouse } from './Mouse'
 import { IPlugin } from './Plugin'
 import Runner from './Runner'
 import Sleeping from './Sleeping'
@@ -96,7 +98,10 @@ export interface IEngine {
 
   events: Record<EngineEventName, EngineEventFunction>
   pairs: IPairs
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   metrics: any
+  render?: IRender
+  mouse?: IMouse
 }
 
 interface IEngineTiming {
@@ -464,6 +469,7 @@ export default class Engine {
   public static run = Runner.run
 }
 
+// eslint-disable-next-line no-extra-semi
 ;(() => {
   Common.deprecated(
     Engine as Object as Record<string, Function>,

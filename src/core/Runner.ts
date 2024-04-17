@@ -53,6 +53,7 @@ export default class Runner {
   protected static _frameTimeout: NodeJS.Timeout
   protected static _requestAnimationFrame =
     window?.requestAnimationFrame ??
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     ((callback: (time: number) => any) => {
       Runner._frameTimeout = setTimeout(() => {
         callback(Common.now())
@@ -62,8 +63,8 @@ export default class Runner {
     Runner._requestAnimationFrame === window.requestAnimationFrame
       ? window.cancelAnimationFrame
       : () => {
-          clearTimeout(Runner._frameTimeout)
-        }
+        clearTimeout(Runner._frameTimeout)
+      }
 
   /**
    * Creates a new Runner. The options parameter is an object that specifies any properties you wish to override the defaults.

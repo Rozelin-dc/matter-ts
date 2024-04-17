@@ -4,13 +4,16 @@ export type DeepPartial<T> = T extends object
     }
   : T
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type Decomp = any
+
 interface IWindow extends Window {
-  decomp: any
+  decomp: Decomp
 }
 declare const window: IWindow
 
 interface IGlobal extends NodeJS.Global {
-  decomp: any
+  decomp: Decomp
 }
 declare const global: IGlobal
 
@@ -159,6 +162,7 @@ export default class Common {
    * @param obj
    * @return True if the object is a HTMLElement, otherwise false
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static isElement(obj: any): obj is HTMLElement {
     if (typeof HTMLElement !== 'undefined') {
       return obj instanceof HTMLElement
@@ -175,6 +179,7 @@ export default class Common {
    * @param end Path slice end
    * @return The object at the given path
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static get<T extends Record<string, any>>(
     obj: T,
     path: string,
@@ -197,6 +202,7 @@ export default class Common {
    * @param end Path slice end
    * @return Pass through `val` for chaining
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static set<T extends Record<string, any>>(
     obj: T,
     path: string,
@@ -218,21 +224,21 @@ export default class Common {
   public static extend<T extends Object, E extends Object = T>(
     obj: T & Partial<E>,
     deep?: boolean | E,
-    ..._params: E[]
+    ...params: E[]
   ): T & E {
-    let argsStart: number
     let deepClone: boolean
+    let args: E[]
 
     if (typeof deep === 'boolean') {
-      argsStart = 2
       deepClone = deep
+      args = params
     } else {
-      argsStart = 1
       deepClone = true
+      args = deep ? [deep, ...params] : params
     }
 
-    for (let i = argsStart; i < arguments.length; i++) {
-      const source: E = arguments[i]
+    for (let i = 0; i < args.length; i++) {
+      const source = args[i]
       if (source) {
         for (const prop in source) {
           const value = source[prop]
@@ -242,6 +248,7 @@ export default class Common {
                 keyof E,
                 string
               >]
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
               Common.extend(obj[prop] as any, deepClone, value)
             } else {
               obj[prop] = value as unknown as (T & Partial<E>)[Extract<
@@ -352,6 +359,7 @@ export default class Common {
    * @param graph
    * @return Partially ordered set of vertices in topological order.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static topologicalSort<T extends Record<any, any[]>>(
     graph: T
   ): (keyof T)[] {
@@ -371,6 +379,7 @@ export default class Common {
     return result
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   protected static _topologicalSort<T extends Record<any, any[]>>(
     node: keyof T,
     visited: Record<keyof T, boolean>,
@@ -409,12 +418,12 @@ export default class Common {
    * @return A new function that calls the passed functions in order.
    */
   public static chain(...params: Function[]): Function {
-    const funcs: any[] = []
+    const funcs: Function[] = []
 
     for (const func of params) {
       if ('_chained' in func) {
         // flatten already chained functions
-        funcs.push.apply(funcs, func._chained as any[])
+        funcs.push.apply(funcs, func._chained as Function[])
       } else {
         funcs.push(func)
       }
@@ -422,14 +431,16 @@ export default class Common {
 
     const chain = function () {
       // https://github.com/GoogleChrome/devtools-docs/issues/53#issuecomment-51941358
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let lastResult: any
-      const args = new Array(arguments.length)
+      const args = new Array(params.length)
 
-      for (let i = 0, l = arguments.length; i < l; i++) {
-        args[i] = arguments[i]
+      for (let i = 0; i < params.length; i++) {
+        args[i] = params[i]
       }
 
       for (let i = 0; i < funcs.length; i += 1) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const result: any = funcs[i].apply(lastResult, args)
 
         if (typeof result !== 'undefined') {
@@ -453,6 +464,7 @@ export default class Common {
    * @param func The function to chain before the original
    * @return The chained function that replaced the original
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static chainPathBefore<T extends Record<string, any>>(
     base: T,
     path: string,
@@ -476,6 +488,7 @@ export default class Common {
    * @param func The function to chain after the original
    * @return The chained function that replaced the original
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static chainPathAfter<T extends Record<string, any>>(
     base: T,
     path: string,
@@ -496,7 +509,7 @@ export default class Common {
    * concave vertex decomposition support when using `Bodies.fromVertices` e.g. `Common.setDecomp(require('poly-decomp'))`.
    * @param decomp The [poly-decomp](https://github.com/schteppe/poly-decomp.js) library module.
    */
-  public static setDecomp(decomp: any): void {
+  public static setDecomp(decomp: Decomp): void {
     Common._decomp = decomp
   }
 
@@ -505,7 +518,8 @@ export default class Common {
    * otherwise returns the global `decomp` if set.
    * @return The [poly-decomp](https://github.com/schteppe/poly-decomp.js) library module if provided.
    */
-  public static getDecomp(): any {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public static getDecomp(): Decomp {
     // get user provided decomp if set
     let decomp = Common._decomp
 

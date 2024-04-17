@@ -1,7 +1,6 @@
 import Plugin, { IPlugin } from './Plugin'
 import Common from './Common'
-
-const pkg = require('../../package.json')
+import pkg from '../../package.json'
 
 /**
  * includes a function for installing plugins on top of the library.

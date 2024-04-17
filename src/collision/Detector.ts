@@ -71,7 +71,6 @@ export default class Detector {
 
     for (let i = 0; i < bodiesLength; i++) {
       const bodyA = bodies[i]
-      const boundsA = bodyA.bounds
       const boundXMax = bodyA.bounds.max.x
       const boundYMax = bodyA.bounds.max.y
       const boundYMin = bodyA.bounds.min.y
