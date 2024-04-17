@@ -311,13 +311,26 @@ interface IInspector {
  */
 export default class Render {
   protected static _requestAnimationFrame =
-    window?.requestAnimationFrame ??
-    ((callback: (time: number) => any) => {
+    window.requestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.webkitRequestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.mozRequestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.msRequestAnimationFrame.bind(window) ||
+    function (callback: (time: number) => any) {
       window.setTimeout(function () {
         callback(Common.now())
       }, 1000 / 60)
-    })
-  protected static _cancelAnimationFrame = window.cancelAnimationFrame
+    }
+  protected static _cancelAnimationFrame =
+    window.cancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.mozCancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.webkitCancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.msCancelAnimationFrame.bind(window)
 
   protected static _goodFps = 30
   protected static _goodDelta = 1000 / 60
