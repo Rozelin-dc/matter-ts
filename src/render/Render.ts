@@ -319,6 +319,7 @@ export default class Render {
     window.mozRequestAnimationFrame.bind(window) ||
     // @ts-ignore
     window.msRequestAnimationFrame.bind(window) ||
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function (callback: (time: number) => any) {
       window.setTimeout(function () {
         callback(Common.now())

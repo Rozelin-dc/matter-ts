@@ -59,6 +59,7 @@ export default class Runner {
     window.mozRequestAnimationFrame.bind(window) ||
     // @ts-ignore
     window.msRequestAnimationFrame.bind(window) ||
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function (callback: (time: number) => any) {
       Runner._frameTimeout = setTimeout(() => {
         callback(Common.now())
