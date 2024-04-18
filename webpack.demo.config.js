@@ -41,7 +41,9 @@ License ${pkg.license}`;
         },
         resolve: {
             alias:{
+                'matter-js': resolve(devPath),
                 'matter-ts': resolve(devPath),
+                '@rozelin/matter-ts': resolve(devPath),
                 'MatterDev': resolve(devPath),
                 'MatterBuild': resolve(
                     devServer ? buildPath : devPath

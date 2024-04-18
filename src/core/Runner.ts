@@ -52,19 +52,30 @@ export interface IRunner {
 export default class Runner {
   protected static _frameTimeout: NodeJS.Timeout
   protected static _requestAnimationFrame =
-    window?.requestAnimationFrame ??
+    window.requestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.webkitRequestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.mozRequestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.msRequestAnimationFrame.bind(window) ||
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    ((callback: (time: number) => any) => {
+    function (callback: (time: number) => any) {
       Runner._frameTimeout = setTimeout(() => {
         callback(Common.now())
       }, 1000 / 60)
-    })
+    }
   protected static _cancelAnimationFrame =
-    Runner._requestAnimationFrame === window.requestAnimationFrame
-      ? window.cancelAnimationFrame
-      : () => {
-        clearTimeout(Runner._frameTimeout)
-      }
+    window.cancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.mozCancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.webkitCancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.msCancelAnimationFrame.bind(window) ||
+    function () {
+      clearTimeout(Runner._frameTimeout)
+    }
 
   /**
    * Creates a new Runner. The options parameter is an object that specifies any properties you wish to override the defaults.
@@ -114,7 +125,7 @@ export default class Runner {
       runner = target
     }
 
-    const run = (time?: number) => {
+    const run = function (time?: number) {
       runner.frameRequestId = Runner._requestAnimationFrame(run)
 
       if (time && runner.enabled) {
