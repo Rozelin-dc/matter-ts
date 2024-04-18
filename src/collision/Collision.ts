@@ -317,7 +317,6 @@ export default class Collision {
 
     let vertexA = vertices[0]
     let vertexB: IVertex
-    let vertexC: IVertex
 
     // find deepest vertex relative to the axis
     for (let j = 0; j < verticesLength; j += 1) {
@@ -334,7 +333,7 @@ export default class Collision {
     }
 
     // measure next vertex
-    vertexC = vertices[(verticesLength + vertexA.index - 1) % verticesLength]
+    const vertexC = vertices[(verticesLength + vertexA.index - 1) % verticesLength]
     nearestDistance =
       normalX * (bodyAPositionX - vertexC.x) +
       normalY * (bodyAPositionY - vertexC.y)

@@ -1,11 +1,13 @@
 import { IBody } from '../body/Body'
 import Common, { DeepPartial } from '../core/Common'
+import { IEngine } from '../core/Engine'
 import Pair from './Pair'
 
 export interface IGrid {
   buckets: Record<string, IBody[]>
   pairs: Record<string, BodyPair>
-  pairsList: any[]
+
+  pairsList: BodyPair[]
 
   /**
    * The width of a single grid bucket.
@@ -72,7 +74,7 @@ export default class Grid {
   public static update(
     grid: IGrid,
     bodies: IBody[],
-    engine: any,
+    engine: IEngine,
     forceUpdate: boolean
   ): void {
     let gridChanged = false
@@ -86,14 +88,17 @@ export default class Grid {
       }
 
       // temporary back compatibility bounds check
-      if (
-        world.bounds &&
-        (body.bounds.max.x < world.bounds.min.x ||
-          body.bounds.min.x > world.bounds.max.x ||
-          body.bounds.max.y < world.bounds.min.y ||
-          body.bounds.min.y > world.bounds.max.y)
-      ) {
-        continue
+      if ('bounds' in world) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const bounds: any = world.bounds
+        if (
+          body.bounds.max.x < bounds.min.x ||
+          body.bounds.min.x > bounds.max.x ||
+          body.bounds.max.y < bounds.min.y ||
+          body.bounds.min.y > bounds.max.y
+        ) {
+          continue
+        }
       }
 
       const newRegion = Grid._getRegion(grid, body)
@@ -355,6 +360,7 @@ export default class Grid {
   }
 }
 
+// eslint-disable-next-line no-extra-semi
 ;(() => {
   Common.deprecated(
     Grid as Object as Record<string, Function>,

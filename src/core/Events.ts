@@ -52,6 +52,7 @@ export interface IEvent<T> {
 }
 
 interface ICompositeEvent extends IEvent<IComposite> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   object: any
 }
 

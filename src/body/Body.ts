@@ -652,6 +652,7 @@ export default class Body {
     }
 
     for (const property in settings) {
+      // eslint-disable-next-line no-prototype-builtins
       if (!settings.hasOwnProperty(property)) {
         continue
       }
@@ -883,7 +884,7 @@ export default class Body {
 
     // find the convex hull of all parts to set on the parent body
     if (autoHull) {
-      var vertices: IVertices = []
+      let vertices: IVertices = []
       for (const part of parts) {
         vertices = vertices.concat(part.vertices)
       }
