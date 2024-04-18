@@ -6,7 +6,7 @@ import Pairs, { IPairs } from '../collision/Pairs'
 import Resolver from '../collision/Resolver'
 import Constraint from '../constraint/Constraint'
 import { IRender } from '../render/Render'
-import Common, { DeepPartial } from './Common'
+import Common from './Common'
 import Events, { EngineEventFunction, EngineEventName } from './Events'
 import { IMouse } from './Mouse'
 import { IPlugin } from './Plugin'
@@ -180,7 +180,7 @@ export default class Engine {
    * @param options
    * @return engine
    */
-  public static create(options: DeepPartial<IEngine> = {}): IEngine {
+  public static create(options: Partial<IEngine> = {}): IEngine {
     const defaults: Omit<
       IEngine,
       'world' | 'detector' | 'pairs' | 'grid' | 'broadphase' | 'metrics'

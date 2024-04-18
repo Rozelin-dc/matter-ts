@@ -59,6 +59,6 @@ export default class Matter {
    */
   public static after(path: string, func: Function): Function {
     path = path.replace(/^Matter./, '')
-    return Common.chainPathAfter(Matter, path, func)
+    return Common.chainPathAfter(Matter, path, func) as Function
   }
 }
