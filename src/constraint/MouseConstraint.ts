@@ -2,6 +2,7 @@ import { IBody } from '../body/Body'
 import Composite from '../body/Composite'
 import Detector, { ICollisionFilter } from '../collision/Detector'
 import Common from '../core/Common'
+import { IEngine } from '../core/Engine'
 import Events, { MouseEventFunction, MouseEventName } from '../core/Events'
 import Mouse, { IMouse } from '../core/Mouse'
 import Sleeping from '../core/Sleeping'
@@ -61,11 +62,11 @@ export default class MouseConstraint {
    * @return A new MouseConstraint
    */
   public static create(
-    engine: any,
+    engine: IEngine,
     options: Partial<IMouseConstraint>
   ): IMouseConstraint {
     let mouse =
-      (engine ? engine.mouse : null) || (options ? options.mouse : null)
+      (engine ? engine.mouse ?? null : null) || (options ? options.mouse : null)
 
     if (!mouse) {
       if (engine && engine.render && engine.render.canvas) {

@@ -46,7 +46,6 @@ export default class Pairs {
     const pairsList = pairs.list
     let pairsListLength = pairsList.length
     const pairsTable = pairs.table
-    const collisionsLength = collisions.length
     const collisionStart = pairs.collisionStart
     const collisionEnd = pairs.collisionEnd
     const collisionActive = pairs.collisionActive

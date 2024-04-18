@@ -26,6 +26,7 @@ export default class SAT {
   }
 }
 
+// eslint-disable-next-line no-extra-semi
 ;(function () {
   Common.deprecated(
     SAT as Object as Record<string, Function>,

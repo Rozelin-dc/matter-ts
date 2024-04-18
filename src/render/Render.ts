@@ -2,7 +2,7 @@ import Body, { IBody } from '../body/Body'
 import Composite from '../body/Composite'
 import { IPair } from '../collision/Pair'
 import { IConstraint } from '../constraint/Constraint'
-import Common, { DeepPartial } from '../core/Common'
+import Common from '../core/Common'
 import Engine, { IEngine } from '../core/Engine'
 import Events, { RenderEventFunction, RenderEventName } from '../core/Events'
 import Mouse, { IMouse } from '../core/Mouse'
@@ -300,6 +300,7 @@ interface IRenderTiming {
 interface IInspector {
   selected: { data: IBody | IConstraint }[]
   render: IRender
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   selectStart: any
   selectBounds: IBounds
 }
@@ -345,7 +346,7 @@ export default class Render {
    */
   public static create(
     options: Partial<Omit<IRender, 'options'>> & {
-      options?: IRenderOptions
+      options?: Partial<IRenderOptions>
     } = {}
   ): IRender {
     const defaults: Omit<
@@ -546,6 +547,7 @@ export default class Render {
    */
   public static lookAt(
     render: IRender,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     objects: any | any[],
     padding: IVector = Vector.create(0, 0),
     center: boolean = true
@@ -1165,7 +1167,6 @@ export default class Render {
     bodies: IBody[],
     context: CanvasRenderingContext2D
   ): void {
-    const engine = render.engine
     const options = render.options
     const showInternalEdges = options.showInternalEdges || !options.wireframes
 
@@ -1838,7 +1839,7 @@ export default class Render {
 
       switch (item.type) {
         case 'body':
-          // render body selections
+        // render body selections
           const bounds = item.bounds
           context.beginPath()
           context.rect(
@@ -1853,7 +1854,7 @@ export default class Render {
           break
 
         case 'constraint':
-          // render constraint selections
+        // render constraint selections
           let point = item.pointA
           if (item.bodyA) {
             point = item.pointB

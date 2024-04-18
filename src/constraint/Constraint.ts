@@ -436,7 +436,7 @@ export default class Constraint {
       Sleeping.set(body, false)
 
       // update geometry and reset
-      for (var j = 0; j < body.parts.length; j++) {
+      for (let j = 0; j < body.parts.length; j++) {
         const part = body.parts[j]
 
         Vertices.translate(part.vertices, impulse)

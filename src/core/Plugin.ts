@@ -112,6 +112,7 @@ export default class Plugin {
    * @param obj The obj to test.
    * @return `true` if the object can be considered a plugin otherwise `false`.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   public static isPlugin(obj: any): obj is IPlugin {
     return obj && 'name' in obj && 'version' in obj && 'install' in obj
   }
@@ -139,6 +140,7 @@ export default class Plugin {
    */
   public static isFor(
     plugin: IPlugin,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     m: { name?: string | undefined; [_: string]: any }
   ): boolean {
     const parsed = Plugin.dependencyParse(plugin.for)
@@ -165,6 +167,7 @@ export default class Plugin {
    * @param [plugins=module.uses] {} The plugins to install on module (optional, defaults to `module.uses`).
    */
   public static use<T extends IPlugin | string>(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     m: { uses?: T[]; [_: string]: any },
     plugins: T[]
   ): void {

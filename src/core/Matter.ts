@@ -1,7 +1,6 @@
 import Plugin, { IPlugin } from './Plugin'
 import Common from './Common'
-
-const pkg = require('../../package.json')
+import pkg from '../../package.json'
 
 /**
  * includes a function for installing plugins on top of the library.
@@ -60,6 +59,6 @@ export default class Matter {
    */
   public static after(path: string, func: Function): Function {
     path = path.replace(/^Matter./, '')
-    return Common.chainPathAfter(Matter, path, func)
+    return Common.chainPathAfter(Matter, path, func) as Function
   }
 }
