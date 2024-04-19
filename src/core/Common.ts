@@ -156,6 +156,10 @@ export default class Common {
     return Object.prototype.toString.call(obj) === '[object Array]'
   }
 
+  public static isObject(value: unknown): value is Object {
+    return !!value && value.constructor === Object
+  }
+
   /**
    * Returns true if the object is a HTMLElement, otherwise false.
    * @method isElement
@@ -221,6 +225,21 @@ export default class Common {
    * @param deep
    * @return obj extended
    */
+  public static extend<T extends Object, E extends Object>(
+    obj: T,
+    deep?: boolean | E,
+    ...params: E[]
+  ): T & E
+  public static extend<T extends Object>(
+    obj: DeepPartial<T>,
+    deep?: boolean | T,
+    ...params: T[]
+  ): T
+  public static extend<T extends Object>(
+    obj: T,
+    deep?: boolean | DeepPartial<T>,
+    ...params: DeepPartial<T>[]
+  ): T
   public static extend<T extends Object, E extends Object = T>(
     obj: T & Partial<E>,
     deep?: boolean | E,
@@ -237,21 +256,21 @@ export default class Common {
       args = deep ? [deep, ...params] : params
     }
 
+    if (!deepClone) {
+      return Object.assign(obj, ...args)
+    }
+
     for (let i = 0; i < args.length; i++) {
       const source = args[i]
       if (source) {
         for (const prop in source) {
           const value = source[prop]
-          if (deepClone && value && typeof value === 'object') {
-            if (!obj[prop] || typeof obj[prop] === 'object') {
-              obj[prop] = (obj[prop] || {}) as (T & Partial<E>)[Extract<
-                keyof E,
-                string
-              >]
+          if (Common.isObject(value)) {
+            if (obj[prop]) {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
               Common.extend(obj[prop] as any, deepClone, value)
             } else {
-              obj[prop] = value as unknown as (T & Partial<E>)[Extract<
+              obj[prop] = { ...value } as unknown as (T & Partial<E>)[Extract<
                 keyof E,
                 string
               >]
