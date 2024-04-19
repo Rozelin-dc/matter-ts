@@ -1,13 +1,14 @@
 /*!
- * @rozelin/matter-ts 1.0.0 by @Rozelin
- * undefined
+ * @rozelin/matter-ts 1.0.5 by @Rozelin
+ * https://github.com/Rozelin-dc/matter-tools
  * License MIT
  *
  * The MIT License (MIT)
  *
  * Copyright (c) Rozelin.
  *
- * This software is a modified version of the original software licensed under the MIT License. Original copyright (c) Liam Brummitt. All rights reserved.
+ * This software is a modified version of the original software licensed under
+ * the MIT License. Original copyright (c) Liam Brummitt. All rights reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -210,6 +211,7 @@ class Body {
             return;
         }
         for (const property in settings) {
+            // eslint-disable-next-line no-prototype-builtins
             if (!settings.hasOwnProperty(property)) {
                 continue;
             }
@@ -412,7 +414,7 @@ class Body {
         }
         // find the convex hull of all parts to set on the parent body
         if (autoHull) {
-            var vertices = [];
+            let vertices = [];
             for (const part of parts) {
                 vertices = vertices.concat(part.vertices);
             }
@@ -1597,7 +1599,6 @@ class Collision {
         let nearestDistance = Number.MAX_VALUE;
         let vertexA = vertices[0];
         let vertexB;
-        let vertexC;
         // find deepest vertex relative to the axis
         for (let j = 0; j < verticesLength; j += 1) {
             vertexB = vertices[j];
@@ -1610,7 +1611,7 @@ class Collision {
             }
         }
         // measure next vertex
-        vertexC = vertices[(verticesLength + vertexA.index - 1) % verticesLength];
+        const vertexC = vertices[(verticesLength + vertexA.index - 1) % verticesLength];
         nearestDistance =
             normalX * (bodyAPositionX - vertexC.x) +
                 normalY * (bodyAPositionY - vertexC.y);
@@ -1731,7 +1732,6 @@ class Detector {
         bodies.sort(Detector._compareBoundsX);
         for (let i = 0; i < bodiesLength; i++) {
             const bodyA = bodies[i];
-            const boundsA = bodyA.bounds;
             const boundXMax = bodyA.bounds.max.x;
             const boundYMax = bodyA.bounds.max.y;
             const boundYMin = bodyA.bounds.min.y;
@@ -1874,12 +1874,15 @@ class Grid {
                 continue;
             }
             // temporary back compatibility bounds check
-            if (world.bounds &&
-                (body.bounds.max.x < world.bounds.min.x ||
-                    body.bounds.min.x > world.bounds.max.x ||
-                    body.bounds.max.y < world.bounds.min.y ||
-                    body.bounds.min.y > world.bounds.max.y)) {
-                continue;
+            if ('bounds' in world) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                const bounds = world.bounds;
+                if (body.bounds.max.x < bounds.min.x ||
+                    body.bounds.min.x > bounds.max.x ||
+                    body.bounds.max.y < bounds.min.y ||
+                    body.bounds.min.y > bounds.max.y) {
+                    continue;
+                }
             }
             const newRegion = Grid._getRegion(grid, body);
             // if the body has changed grid region
@@ -2094,6 +2097,7 @@ class Grid {
     }
 }
 exports["default"] = Grid;
+// eslint-disable-next-line no-extra-semi
 ;
 (() => {
     Common_1.default.deprecated(Grid, 'update', 'Grid.update ➤ replaced by Matter.Detector');
@@ -2272,7 +2276,6 @@ class Pairs {
         const pairsList = pairs.list;
         let pairsListLength = pairsList.length;
         const pairsTable = pairs.table;
-        const collisionsLength = collisions.length;
         const collisionStart = pairs.collisionStart;
         const collisionEnd = pairs.collisionEnd;
         const collisionActive = pairs.collisionActive;
@@ -2821,6 +2824,7 @@ class SAT {
     }
 }
 exports["default"] = SAT;
+// eslint-disable-next-line no-extra-semi
 ;
 (function () {
     Common_1.default.deprecated(SAT, 'collides', 'SAT.collides ➤ replaced by Collision.collides');
@@ -3077,7 +3081,7 @@ class Constraint {
             }
             Sleeping_1.default.set(body, false);
             // update geometry and reset
-            for (var j = 0; j < body.parts.length; j++) {
+            for (let j = 0; j < body.parts.length; j++) {
                 const part = body.parts[j];
                 Vertices_1.default.translate(part.vertices, impulse);
                 if (j > 0) {
@@ -3192,8 +3196,8 @@ class MouseConstraint {
      * @return A new MouseConstraint
      */
     static create(engine, options) {
-        var _a;
-        let mouse = (engine ? engine.mouse : null) || (options ? options.mouse : null);
+        var _a, _b;
+        let mouse = (engine ? (_a = engine.mouse) !== null && _a !== void 0 ? _a : null : null) || (options ? options.mouse : null);
         if (!mouse) {
             if (engine && engine.render && engine.render.canvas) {
                 mouse = Mouse_1.default.create(engine.render.canvas);
@@ -3237,7 +3241,7 @@ class MouseConstraint {
             MouseConstraint.update(mouseConstraint, allBodies);
             MouseConstraint._triggerEvents(mouseConstraint);
         });
-        mouseConstraint.events = (_a = mouseConstraint.events) !== null && _a !== void 0 ? _a : {};
+        mouseConstraint.events = (_b = mouseConstraint.events) !== null && _b !== void 0 ? _b : {};
         return mouseConstraint;
     }
     /**
@@ -3433,12 +3437,16 @@ class Common {
     static isArray(obj) {
         return Object.prototype.toString.call(obj) === '[object Array]';
     }
+    static isObject(value) {
+        return !!value && value.constructor === Object;
+    }
     /**
      * Returns true if the object is a HTMLElement, otherwise false.
      * @method isElement
      * @param obj
      * @return True if the object is a HTMLElement, otherwise false
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static isElement(obj) {
         if (typeof HTMLElement !== 'undefined') {
             return obj instanceof HTMLElement;
@@ -3453,6 +3461,7 @@ class Common {
      * @param end Path slice end
      * @return The object at the given path
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static get(obj, path, begin, end) {
         const pathArray = path.split('.').slice(begin, end);
         for (const part of pathArray) {
@@ -3469,40 +3478,38 @@ class Common {
      * @param end Path slice end
      * @return Pass through `val` for chaining
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static set(obj, path, val, begin, end) {
         const parts = path.split('.').slice(begin, end);
         Common.get(obj, path, 0, -1)[parts[parts.length - 1]] = val;
         return val;
     }
-    /**
-     * Extends the object in the first argument using the object in the second argument.
-     * @param obj
-     * @param deep
-     * @return obj extended
-     */
-    static extend(obj, deep, ..._params) {
-        let argsStart;
+    static extend(obj, deep, ...params) {
         let deepClone;
+        let args;
         if (typeof deep === 'boolean') {
-            argsStart = 2;
             deepClone = deep;
+            args = params;
         }
         else {
-            argsStart = 1;
             deepClone = true;
+            args = deep ? [deep, ...params] : params;
         }
-        for (let i = argsStart; i < arguments.length; i++) {
-            const source = arguments[i];
+        if (!deepClone) {
+            return Object.assign(obj, ...args);
+        }
+        for (let i = 0; i < args.length; i++) {
+            const source = args[i];
             if (source) {
                 for (const prop in source) {
                     const value = source[prop];
-                    if (deepClone && value && typeof value === 'object') {
-                        if (!obj[prop] || typeof obj[prop] === 'object') {
-                            obj[prop] = (obj[prop] || {});
+                    if (Common.isObject(value)) {
+                        if (obj[prop]) {
+                            // eslint-disable-next-line @typescript-eslint/no-explicit-any
                             Common.extend(obj[prop], deepClone, value);
                         }
                         else {
-                            obj[prop] = value;
+                            obj[prop] = Object.assign({}, value);
                         }
                     }
                     else {
@@ -3587,6 +3594,7 @@ class Common {
      * @param graph
      * @return Partially ordered set of vertices in topological order.
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static topologicalSort(graph) {
         // https://github.com/mgechev/javascript-algorithms
         // Copyright (c) Minko Gechev (MIT license)
@@ -3601,6 +3609,7 @@ class Common {
         }
         return result;
     }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static _topologicalSort(node, visited, temp, graph, result) {
         const neighbors = graph[node] || [];
         temp[node] = true;
@@ -3640,12 +3649,14 @@ class Common {
         }
         const chain = function () {
             // https://github.com/GoogleChrome/devtools-docs/issues/53#issuecomment-51941358
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             let lastResult;
-            const args = new Array(arguments.length);
-            for (var i = 0, l = arguments.length; i < l; i++) {
-                args[i] = arguments[i];
+            const args = new Array(params.length);
+            for (let i = 0; i < params.length; i++) {
+                args[i] = params[i];
             }
-            for (i = 0; i < funcs.length; i += 1) {
+            for (let i = 0; i < funcs.length; i += 1) {
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const result = funcs[i].apply(lastResult, args);
                 if (typeof result !== 'undefined') {
                     lastResult = result;
@@ -3664,6 +3675,7 @@ class Common {
      * @param func The function to chain before the original
      * @return The chained function that replaced the original
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static chainPathBefore(base, path, func) {
         return Common.set(base, path, Common.chain(func, Common.get(base, path)));
     }
@@ -3675,6 +3687,7 @@ class Common {
      * @param func The function to chain after the original
      * @return The chained function that replaced the original
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static chainPathAfter(base, path, func) {
         return Common.set(base, path, Common.chain(Common.get(base, path), func));
     }
@@ -3691,6 +3704,7 @@ class Common {
      * otherwise returns the global `decomp` if set.
      * @return The [poly-decomp](https://github.com/schteppe/poly-decomp.js) library module if provided.
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static getDecomp() {
         // get user provided decomp if set
         let decomp = Common._decomp;
@@ -3996,6 +4010,7 @@ class Engine {
  */
 Engine.run = Runner_1.default.run;
 exports["default"] = Engine;
+// eslint-disable-next-line no-extra-semi
 ;
 (() => {
     Common_1.default.deprecated(Engine, 'run', 'Engine.run ➤ use public static Runner.run(engine) instead');
@@ -4089,7 +4104,7 @@ var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const Plugin_1 = __importDefault(__webpack_require__(885));
 const Common_1 = __importDefault(__webpack_require__(120));
-const pkg = __webpack_require__(147);
+const package_json_1 = __importDefault(__webpack_require__(147));
 /**
  * includes a function for installing plugins on top of the library.
  */
@@ -4134,7 +4149,7 @@ Matter.libraryName = 'matter-ts';
 /**
  * The library version.
  */
-Matter.version = (_a = pkg.version) !== null && _a !== void 0 ? _a : 'undefined';
+Matter.version = (_a = package_json_1.default.version) !== null && _a !== void 0 ? _a : 'undefined';
 /**
  * A list of plugin dependencies to be installed. These are normally set and installed through `Matter.use`.
  * Alternatively you may set `Matter.uses` manually and install them by calling `Plugin.use(Matter)`.
@@ -4402,6 +4417,7 @@ class Plugin {
      * @param obj The obj to test.
      * @return `true` if the object can be considered a plugin otherwise `false`.
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static isPlugin(obj) {
         return obj && 'name' in obj && 'version' in obj && 'install' in obj;
     }
@@ -4422,7 +4438,9 @@ class Plugin {
      * @param m The module.
      * @return `true` if `plugin.for` is applicable to `module`, otherwise `false`.
      */
-    static isFor(plugin, m) {
+    static isFor(plugin, 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    m) {
         const parsed = Plugin.dependencyParse(plugin.for);
         return (!plugin.for ||
             (m.name === parsed.name &&
@@ -4443,7 +4461,9 @@ class Plugin {
      * @param m The module install plugins on.
      * @param [plugins=module.uses] {} The plugins to install on module (optional, defaults to `module.uses`).
      */
-    static use(m, plugins) {
+    static use(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    m, plugins) {
         m.uses = (m.uses || []).concat(plugins || []);
         if (m.uses.length === 0) {
             Common_1.default.warn('Plugin.use:', JSON.stringify(m), 'does not specify any dependencies to install.');
@@ -4657,7 +4677,6 @@ exports["default"] = Plugin;
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const Common_1 = __importDefault(__webpack_require__(120));
 const Engine_1 = __importDefault(__webpack_require__(332));
@@ -4714,7 +4733,7 @@ class Runner {
         else {
             runner = target;
         }
-        const run = (time) => {
+        const run = function (time) {
             runner.frameRequestId = Runner._requestAnimationFrame(run);
             if (time && runner.enabled) {
                 Runner.tick(runner, engine, time);
@@ -4794,14 +4813,27 @@ class Runner {
         Runner.run(runner, engine);
     }
 }
-Runner._requestAnimationFrame = (_a = window === null || window === void 0 ? void 0 : window.requestAnimationFrame) !== null && _a !== void 0 ? _a : ((callback) => {
-    Runner._frameTimeout = setTimeout(() => {
-        callback(Common_1.default.now());
-    }, 1000 / 60);
-});
-Runner._cancelAnimationFrame = Runner._requestAnimationFrame === window.requestAnimationFrame
-    ? window.cancelAnimationFrame
-    : () => {
+Runner._requestAnimationFrame = window.requestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.webkitRequestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.mozRequestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.msRequestAnimationFrame.bind(window) ||
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function (callback) {
+        Runner._frameTimeout = setTimeout(() => {
+            callback(Common_1.default.now());
+        }, 1000 / 60);
+    };
+Runner._cancelAnimationFrame = window.cancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.mozCancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.webkitCancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.msCancelAnimationFrame.bind(window) ||
+    function () {
         clearTimeout(Runner._frameTimeout);
     };
 exports["default"] = Runner;
@@ -5538,7 +5570,6 @@ class Composites {
     }
 }
 exports["default"] = Composites;
-;
 (() => {
     Common_1.default.deprecated(Composites, 'newtonsCradle', 'Composites.newtonsCradle ➤ moved to newtonsCradle example');
     Common_1.default.deprecated(Composites, 'car', 'Composites.car ➤ moved to car example');
@@ -5800,6 +5831,7 @@ class Svg {
                 y = ly + py;
             }
         };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const addSegmentPoint = (segment) => {
             const segType = segment.pathSegTypeAsLetter.toUpperCase();
             // skip path ends
@@ -5865,6 +5897,7 @@ class Svg {
                     break;
             }
             // increment by sample value
+            // eslint-disable-next-line no-global-assign
             length += sampleLength;
         }
         // add remaining segments not passed by sampling
@@ -6646,7 +6679,6 @@ exports["default"] = MatterModule;
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
-var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const Body_1 = __importDefault(__webpack_require__(713));
 const Composite_1 = __importDefault(__webpack_require__(927));
@@ -6847,7 +6879,9 @@ class Render {
      * @param padding
      * @param center
      */
-    static lookAt(render, objects, padding = Vector_1.default.create(0, 0), center = true) {
+    static lookAt(render, 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    objects, padding = Vector_1.default.create(0, 0), center = true) {
         objects = Common_1.default.isArray(objects) ? objects : [objects];
         // find bounds of all objects
         const bounds = {
@@ -7278,7 +7312,6 @@ class Render {
      * @param context
      */
     static bodies(render, bodies, context) {
-        const engine = render.engine;
         const options = render.options;
         const showInternalEdges = options.showInternalEdges || !options.wireframes;
         for (const body of bodies) {
@@ -7894,12 +7927,26 @@ class Render {
         render.currentBackground = background;
     }
 }
-Render._requestAnimationFrame = (_a = window === null || window === void 0 ? void 0 : window.requestAnimationFrame) !== null && _a !== void 0 ? _a : ((callback) => {
-    window.setTimeout(function () {
-        callback(Common_1.default.now());
-    }, 1000 / 60);
-});
-Render._cancelAnimationFrame = window.cancelAnimationFrame;
+Render._requestAnimationFrame = window.requestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.webkitRequestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.mozRequestAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.msRequestAnimationFrame.bind(window) ||
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    function (callback) {
+        window.setTimeout(function () {
+            callback(Common_1.default.now());
+        }, 1000 / 60);
+    };
+Render._cancelAnimationFrame = window.cancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.mozCancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.webkitCancelAnimationFrame.bind(window) ||
+    // @ts-ignore
+    window.msCancelAnimationFrame.bind(window);
 Render._goodFps = 30;
 Render._goodDelta = 1000 / 60;
 exports["default"] = Render;
@@ -7910,7 +7957,7 @@ exports["default"] = Render;
 /***/ 147:
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.0.0","license":"MIT","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-tools":"^0.14.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"start":"npm run dev","dev":"npm run serve -- --open","serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-alpha":"webpack --mode=production","build-dev":"webpack --mode=production","build-demo":"rm -rf ./demo/js && webpack --config webpack.demo.config.js --mode=production && webpack --config webpack.demo.config.js --mode=production","lint":"eslint \'src/**/*.ts\' \'demo/src/**/*.js\' \'examples/*.js\' \'webpack.*.js\'","typedoc":"typedoc --out docs src/**/*.ts"},"files":["src","build"]}');
+module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.0.5","license":"MIT","homepage":"https://github.com/Rozelin-dc/matter-tools","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-tools":"^0.14.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"start":"npm run dev","dev":"npm run serve -- --open","serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-alpha":"webpack --mode=production","build-dev":"webpack --mode=production","build-demo":"rm -rf ./demo/js && webpack --config webpack.demo.config.js --mode=production && webpack --config webpack.demo.config.js --mode=production","lint":"eslint \\"src/**/*.ts\\"","typedoc":"typedoc --out docs src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
 
 /***/ })
 
