@@ -225,6 +225,21 @@ export default class Common {
    * @param deep
    * @return obj extended
    */
+  public static extend<T extends Object, E extends Object>(
+    obj: T,
+    deep?: boolean | E,
+    ...params: E[]
+  ): T & E
+  public static extend<T extends Object>(
+    obj: DeepPartial<T>,
+    deep?: boolean | T,
+    ...params: T[]
+  ): T
+  public static extend<T extends Object>(
+    obj: T,
+    deep?: boolean | DeepPartial<T>,
+    ...params: DeepPartial<T>[]
+  ): T
   public static extend<T extends Object, E extends Object = T>(
     obj: T & Partial<E>,
     deep?: boolean | E,
