@@ -6,7 +6,7 @@
   "author": "Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)",
   "description": "a 2D rigid body physics engine for the web",
   "main": "build/matter.js",
-  "types": "build/matter.d.ts",
+  "types": "build/src/matter.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/Rozelin-dc/matter-ts.git"
