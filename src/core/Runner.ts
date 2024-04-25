@@ -1,4 +1,4 @@
-import Common, { DeepPartial } from './Common'
+import Common from './Common'
 import Engine, { IEngine } from './Engine'
 import Events, { RunnerEventFunction, RunnerEventName } from './Events'
 
@@ -82,7 +82,7 @@ export default class Runner {
    * @method create
    * @param options
    */
-  public static create(options: DeepPartial<IRunner> = {}): IRunner {
+  public static create(options: Partial<IRunner> = {}): IRunner {
     const defaults: Omit<IRunner, 'delta' | 'deltaMax' | 'deltaMin'> = {
       fps: 60,
       deltaSampleSize: 60,

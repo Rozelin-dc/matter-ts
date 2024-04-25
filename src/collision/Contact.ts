@@ -13,8 +13,8 @@ export default class Contact {
   /**
    * Creates a new contact.
    * @method create
-   * @param {vertex} vertex
-   * @return {contact} A new contact
+   * @param vertex
+   * @return A new contact
    */
   public static create(vertex: IVertex): IContact {
     return {

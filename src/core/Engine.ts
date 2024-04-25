@@ -104,7 +104,7 @@ export interface IEngine {
   mouse?: IMouse
 }
 
-interface IEngineTiming {
+export interface IEngineTiming {
   /**
    * A `Number` that specifies the global scaling factor of time for all bodies.
    * A value of `0` freezes the simulation.
@@ -398,7 +398,7 @@ export default class Engine {
    * @method _bodiesClearForces
    * @param bodies
    */
-  protected static _bodiesClearForces(bodies: IBody[]) {
+  protected static _bodiesClearForces(bodies: IBody[]): void {
     for (const body of bodies) {
       // reset force buffers
       body.force.x = 0
