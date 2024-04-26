@@ -1190,11 +1190,7 @@ export default class Render {
           context.globalAlpha = part.render.opacity
         }
 
-        if (
-          part.render.sprite &&
-          part.render.sprite.texture &&
-          !options.wireframes
-        ) {
+        if (Body.isSpriteRender(part.render) && !options.wireframes) {
           // part sprite
           const sprite = part.render.sprite
           const texture = Render._getTexture(render, sprite.texture!)
@@ -1261,6 +1257,29 @@ export default class Render {
             context.lineWidth = 1
             context.strokeStyle = render.options.wireframeStrokeStyle
             context.stroke()
+          }
+
+          if (Body.isTextRender(part.render)) {
+            // render text
+            context.font = `${part.render.text.isBold ? 'bold ' : ''}${
+              part.render.text.size
+            }px ${part.render.text.font}`
+            context.fillStyle = part.render.text.color
+            context.textAlign = part.render.text.align
+            context.textBaseline = part.render.text.baseline
+
+            context.translate(part.position.x, part.position.y)
+            context.rotate(part.angle)
+
+            if (part.render.text.isStroke) {
+              context.strokeText(part.render.text.content, 0, 0)
+            } else {
+              context.fillText(part.render.text.content, 0, 0)
+            }
+
+            // revert translation, hopefully faster than save / restore
+            context.rotate(-part.angle)
+            context.translate(-part.position.x, -part.position.y)
           }
         }
 
@@ -1840,7 +1859,7 @@ export default class Render {
 
       switch (item.type) {
         case 'body':
-        // render body selections
+          // render body selections
           const bounds = item.bounds
           context.beginPath()
           context.rect(
@@ -1855,7 +1874,7 @@ export default class Render {
           break
 
         case 'constraint':
-        // render constraint selections
+          // render constraint selections
           let point = item.pointA
           if (item.bodyA) {
             point = item.pointB
