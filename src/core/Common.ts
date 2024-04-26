@@ -152,10 +152,17 @@ export default class Common {
    * @param obj
    * @return True if the object is an array, otherwise false
    */
-  public static isArray<T>(obj: T | T[]): obj is T[] {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public static isArray(obj: unknown): obj is any[] {
     return Object.prototype.toString.call(obj) === '[object Array]'
   }
 
+  /**
+   * Returns true if the object is an Object.
+   * @method isObject
+   * @param value
+   * @return True if the object is an Object, otherwise false
+   */
   public static isObject(value: unknown): value is Object {
     return !!value && value.constructor === Object
   }

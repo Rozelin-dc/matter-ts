@@ -22,7 +22,7 @@ export interface IGrid {
   bucketHeight: number
 }
 
-type BodyPair = [IBody, IBody, number]
+export type BodyPair = [IBody, IBody, number]
 
 export interface IRegion {
   id: string

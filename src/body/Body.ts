@@ -341,7 +341,7 @@ export interface IBody {
   _original: IBodyOriginal | null
 }
 
-interface IBodyRender {
+export interface IBodyRender {
   /**
    * A flag that indicates if the body should be rendered.
    *
@@ -353,7 +353,7 @@ interface IBodyRender {
    * An `Object` that defines the sprite properties to use when rendering, if any.
    *
    */
-  sprite: IBodyRenderSprite
+  sprite?: IBodyRenderSprite
 
   /**
      * A String that defines the fill style to use when rendering the body (if a sprite is not defined). It is the same as when using a canvas, so it accepts CSS style property values.
@@ -379,12 +379,12 @@ interface IBodyRender {
   opacity: number
 }
 
-interface IBodyRenderSprite {
+export interface IBodyRenderSprite {
   /**
    * An `String` that defines the path to the image to use as the sprite texture, if any.
    *
    */
-  texture?: string
+  texture: string
 
   /**
    * A `Number` that defines the scaling in the x-axis for the sprite, if any.
@@ -432,7 +432,7 @@ interface IBodyOriginal {
   inverseInertia: number
 }
 
-type DefaultBody = Omit<
+type InitBody = Omit<
   IBody,
   | 'bounds'
   | 'axes'
@@ -442,9 +442,7 @@ type DefaultBody = Omit<
   | 'parent'
   | 'chamfer'
   | 'render'
-> & { render: Partial<IBodyRender> & { sprite: IBodyRenderSprite } }
-type InitBody = DefaultBody &
-  Partial<
+> & { render: Partial<IBodyRender> } & Partial<
     Pick<
       IBody,
       | 'bounds'
@@ -481,7 +479,7 @@ export default class Body {
    * @return body
    */
   public static create(options: DeepPartial<IBody> = {}): IBody {
-    const defaults: DefaultBody = {
+    const defaults: InitBody = {
       id: Common.nextId(),
       type: 'body',
       label: 'Body',
@@ -520,12 +518,6 @@ export default class Body {
       render: {
         visible: true,
         opacity: 1,
-        sprite: {
-          xScale: 1,
-          yScale: 1,
-          xOffset: 0,
-          yOffset: 0,
-        },
       },
       events: {} as IBody['events'],
       circleRadius: 0,
@@ -539,7 +531,7 @@ export default class Body {
 
     const body = Common.extend(defaults, options)
 
-    Body._initProperties(body as InitBody, options)
+    Body._initProperties(body, options)
 
     return body as IBody
   }
@@ -588,12 +580,15 @@ export default class Body {
     body.render.fillStyle = body.render.fillStyle || defaultFillStyle
     body.render.strokeStyle = body.render.strokeStyle || defaultStrokeStyle
     body.render.lineWidth = body.render.lineWidth || defaultLineWidth
-    body.render.sprite.xOffset +=
-      -(body.bounds!.min.x - body.position.x) /
-      (body.bounds!.max.x - body.bounds!.min.x)
-    body.render.sprite.yOffset +=
-      -(body.bounds!.min.y - body.position.y) /
-      (body.bounds!.max.y - body.bounds!.min.y)
+
+    if (body.render.sprite) {
+      body.render.sprite.xOffset +=
+        -(body.bounds!.min.x - body.position.x) /
+        (body.bounds!.max.x - body.bounds!.min.x)
+      body.render.sprite.yOffset +=
+        -(body.bounds!.min.y - body.position.y) /
+        (body.bounds!.max.y - body.bounds!.min.y)
+    }
   }
 
   /**
@@ -627,9 +622,9 @@ export default class Body {
    * Given a property and a value (or map of), sets the property(s) on the body, using the appropriate setter functions if they exist.
    * Prefer to use the actual setter functions in performance critical situations.
    * @method set
-   * @param {body} body
-   * @param {} settings A property name (or map of properties and values) to set on the body.
-   * @param {} value The value to set if `settings` is a single property name.
+   * @param body
+   * @param settings A property name (or map of properties and values) to set on the body.
+   * @param value The value to set if `settings` is a single property name.
    */
   public static set(body: IBody, settings: Partial<IBody>): void
   public static set<K extends keyof IBody>(
@@ -783,8 +778,8 @@ export default class Body {
   /**
    * Sets the density of the body. Mass and inertia are automatically updated to reflect the change.
    * @method setDensity
-   * @param {body} body
-   * @param {number} density
+   * @param body
+   * @param density
    */
   public static setDensity(body: IBody, density: number): void {
     Body.setMass(body, density * body.area)
@@ -1030,8 +1025,8 @@ export default class Body {
   /**
    * Gets the current linear velocity of the body.
    * @method getVelocity
-   * @param {body} body
-   * @return {vector} velocity
+   * @param body
+   * @return velocity
    */
   public static getVelocity(body: IBody): IVector {
     const timeScale = Body._baseDelta / body.deltaTime

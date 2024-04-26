@@ -101,7 +101,7 @@ export default class Composites {
     xOffsetB: number,
     yOffsetB: number,
     options?: Partial<IConstraint>
-  ) {
+  ): IComposite {
     const bodies = composite.bodies
 
     for (let i = 1; i < bodies.length; i++) {
@@ -412,17 +412,17 @@ export default class Composites {
    * and the [cloth example](https://github.com/liabru/matter-js/blob/master/examples/cloth.js), follow those instead as this function is deprecated here.
    * @deprecated moved to softBody and cloth examples
    * @method softBody
-   * @param {number} x Starting position in X.
-   * @param {number} y Starting position in Y.
-   * @param {number} columns
-   * @param {number} rows
-   * @param {number} columnGap
-   * @param {number} rowGap
-   * @param {boolean} crossBrace
-   * @param {number} particleRadius
-   * @param {} particleOptions
-   * @param {} constraintOptions
-   * @return {composite} A new composite softBody
+   * @param x Starting position in X.
+   * @param y Starting position in Y.
+   * @param columns
+   * @param rows
+   * @param columnGap
+   * @param rowGap
+   * @param crossBrace
+   * @param particleRadius
+   * @param particleOptions
+   * @param constraintOptions
+   * @return A new composite softBody
    */
   public static softBody(
     x: number,

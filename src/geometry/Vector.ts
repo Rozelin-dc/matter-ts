@@ -1,5 +1,7 @@
 export interface IVector {
+  /** @default 0 */
   x: number
+  /** @default 0 */
   y: number
 }
 
@@ -45,8 +47,8 @@ export default class Vector {
   /**
    * Returns the magnitude (length) of a vector (therefore saving a `sqrt` operation).
    * @method magnitudeSquared
-   * @param {vector} vector
-   * @return {number} The squared magnitude of the vector
+   * @param vector
+   * @return The squared magnitude of the vector
    */
   public static magnitudeSquared(vector: IVector): number {
     return vector.x * vector.x + vector.y * vector.y
@@ -55,10 +57,10 @@ export default class Vector {
   /**
    * Rotates the vector about (0, 0) by specified angle.
    * @method rotate
-   * @param {vector} vector
-   * @param {number} angle
-   * @param {vector} [output]
-   * @return {vector} The vector rotated about (0, 0)
+   * @param vector
+   * @param angle
+   * @param output
+   * @return The vector rotated about (0, 0)
    */
   public static rotate(
     vector: IVector,

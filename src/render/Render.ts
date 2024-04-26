@@ -70,7 +70,7 @@ export interface IRender {
   events: Record<RenderEventName, RenderEventFunction[]>
 }
 
-interface IRenderOptions {
+export interface IRenderOptions {
   /**
    * The target width in pixels of the `render.canvas` to be created.
    * See also the `options.pixelRatio` property to change render quality.
@@ -283,7 +283,7 @@ interface IRenderOptions {
   showMousePosition: boolean
 }
 
-interface IRenderTiming {
+export interface IRenderTiming {
   historySize: number
   delta: number
   deltaHistory: number[]
@@ -297,7 +297,7 @@ interface IRenderTiming {
   elapsedHistory: number[]
 }
 
-interface IInspector {
+export interface IInspector {
   selected: { data: IBody | IConstraint }[]
   render: IRender
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -642,7 +642,7 @@ export default class Render {
   /**
    * Applies viewport transforms based on `render.bounds` to a render context.
    * @method startViewTransform
-   * @param {render} render
+   * @param render
    */
   public static startViewTransform(render: IRender): void {
     const boundsWidth = render.bounds.max.x - render.bounds.min.x

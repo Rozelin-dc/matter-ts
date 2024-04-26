@@ -90,7 +90,7 @@ export interface IComposite {
   gravity?: IEngineGravity
 }
 
-type CompositeAddableObject =
+export type CompositeAddableObject =
   | IBody
   | IComposite
   | IConstraint

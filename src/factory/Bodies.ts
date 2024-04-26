@@ -271,7 +271,6 @@ export default class Bodies {
   ): IBody {
     const decomp = Common.getDecomp()
     // check decomp is as expected
-    // @ts-ignore
     const canDecomp = Boolean(decomp && decomp.quickDecomp)
 
     const parts: Pick<IBody, 'position' | 'vertices'>[] = []

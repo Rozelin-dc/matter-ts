@@ -94,7 +94,7 @@ export interface IConstraint {
   angleB: number
 }
 
-interface IConstraintRender {
+export interface IConstraintRender {
   /**
    * A flag that indicates if the constraint should be rendered.
    *
@@ -225,7 +225,6 @@ export default class Constraint {
 
   /**
    * Prepares for solving by constraint warming.
-   * @private
    * @method preSolveAll
    * @param bodies
    */
@@ -248,10 +247,9 @@ export default class Constraint {
 
   /**
    * Solves all constraints in a list of collisions.
-   * @private
    * @method solveAll
-   * @param {constraint[]} constraints
-   * @param {number} delta
+   * @param constraints
+   * @param delta
    */
   public static solveAll(constraints: IConstraint[], delta: number): void {
     const timeScale = Common.clamp(delta / Common._baseDelta, 0, 1)
@@ -287,7 +285,7 @@ export default class Constraint {
    * @param constraint
    * @param timeScale
    */
-  protected static solve(constraint: IConstraint, timeScale: number): void {
+  public static solve(constraint: IConstraint, timeScale: number): void {
     const bodyA = constraint.bodyA
     const bodyB = constraint.bodyB
     const pointA = constraint.pointA
@@ -508,8 +506,8 @@ export default class Constraint {
    * This is the distance between both of the constraint's end points.
    * See `constraint.length` for the target rest length.
    * @method currentLength
-   * @param {constraint} constraint
-   * @returns {number} the current length
+   * @param constraint
+   * @returns the current length
    */
   public static currentLength(constraint: IConstraint): number {
     const pointAX =
