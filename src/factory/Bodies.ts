@@ -1,4 +1,4 @@
-import Body, { IBody } from '../body/Body'
+import Body, { IBody, IBodyTextRender } from '../body/Body'
 import Common, { DeepPartial } from '../core/Common'
 import Bounds from '../geometry/Bounds'
 import Vector from '../geometry/Vector'
@@ -224,6 +224,55 @@ export default class Bodies {
     }
 
     return Body.create(Common.extend<DeepPartial<IBody>>({}, polygon, options))
+  }
+
+  /**
+   * Creates a new rectangle body that fits the letters of the given text.
+   * @method text
+   * @param x
+   * @param y
+   * @param text
+   * @param options
+   * @return A new rectangle body with the given text
+   */
+  public static text(
+    x: number,
+    y: number,
+    text: string,
+    options: DeepPartial<Omit<IBody, 'render'>> & {
+      render?: Partial<IBodyTextRender>
+    } = {}
+  ): IBody {
+    const defaultTextRender: IBodyTextRender['text'] = {
+      content: text,
+      font: 'Arial',
+      align: 'center',
+      baseline: 'middle',
+      color: 'black',
+      size: 16,
+      isBold: false,
+      isStroke: false,
+    }
+    const textRender = Common.extend(defaultTextRender, options.render?.text)
+    textRender.content = text
+
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
+    if (!context) {
+      throw new Error('Failed to create canvas context')
+    }
+    context.font = `${textRender.isBold ? 'bold' : ''} ${textRender.size}px ${
+      textRender.font
+    }`
+    context.textAlign = textRender.align
+    context.textBaseline = textRender.baseline
+    const textWidth = context?.measureText(text).width
+    const textHeight = text.split('\n').length * textRender.size
+
+    return Bodies.rectangle(x, y, textWidth, textHeight, {
+      ...options,
+      render: { ...options.render, text: textRender },
+    })
   }
 
   /**
