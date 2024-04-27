@@ -252,6 +252,8 @@ export default class Bodies {
       size: 16,
       isBold: false,
       isStroke: false,
+      paddingX: 4,
+      paddingY: 4,
     }
     const textRender = Common.extend(defaultTextRender, options.render?.text)
     textRender.content = text
@@ -266,8 +268,8 @@ export default class Bodies {
     }`
     context.textAlign = textRender.align
     context.textBaseline = textRender.baseline
-    const textWidth = context?.measureText(text).width
-    const textHeight = text.split('\n').length * textRender.size
+    const textWidth = context?.measureText(text).width + textRender.paddingX * 2
+    const textHeight = text.split('\n').length * textRender.size + textRender.paddingY * 2
 
     return Bodies.rectangle(x, y, textWidth, textHeight, {
       ...options,

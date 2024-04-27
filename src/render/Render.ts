@@ -1268,7 +1268,10 @@ export default class Render {
             context.textAlign = part.render.text.align
             context.textBaseline = part.render.text.baseline
 
-            context.translate(part.position.x, part.position.y)
+            context.translate(
+              part.position.x + part.render.text.paddingX,
+              part.position.y + part.render.text.paddingY
+            )
             context.rotate(part.angle)
 
             if (part.render.text.isStroke) {
@@ -1279,7 +1282,10 @@ export default class Render {
 
             // revert translation, hopefully faster than save / restore
             context.rotate(-part.angle)
-            context.translate(-part.position.x, -part.position.y)
+            context.translate(
+              -part.position.x - part.render.text.paddingX,
+              -part.position.y - part.render.text.paddingY
+            )
           }
         }
 

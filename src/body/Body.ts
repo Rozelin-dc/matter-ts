@@ -461,6 +461,16 @@ export interface IBodyTextRender extends IBodyCommonRender {
      * @default false
      */
     isStroke: boolean
+
+    /**
+     * @default 4
+     */
+    paddingX: number
+
+    /**
+     * @default 4
+     */
+    paddingY: number
   }
 }
 
@@ -653,6 +663,8 @@ export default class Body {
       render.text.size = render.text.size || 16
       render.text.isBold = render.text.isBold || false
       render.text.isStroke = render.text.isStroke || false
+      render.text.paddingX = render.text.paddingX || 4
+      render.text.paddingY = render.text.paddingY || 4
     }
 
     body.render = render
