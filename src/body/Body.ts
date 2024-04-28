@@ -443,7 +443,7 @@ export interface IBodyTextRender extends IBodyCommonRender {
     baseline: CanvasTextBaseline
 
     /**
-     * @default 'black'
+     * @default '#000000'
      */
     color: string
 
@@ -463,12 +463,12 @@ export interface IBodyTextRender extends IBodyCommonRender {
     isStroke: boolean
 
     /**
-     * @default 4
+     * @default 0
      */
     paddingX: number
 
     /**
-     * @default 4
+     * @default 0
      */
     paddingY: number
   }
@@ -659,12 +659,12 @@ export default class Body {
       render.text.font = render.text.font || 'Arial'
       render.text.align = render.text.align || 'center'
       render.text.baseline = render.text.baseline || 'middle'
-      render.text.color = render.text.color || 'black'
+      render.text.color = render.text.color || '#000000'
       render.text.size = render.text.size || 16
       render.text.isBold = render.text.isBold || false
       render.text.isStroke = render.text.isStroke || false
-      render.text.paddingX = render.text.paddingX || 4
-      render.text.paddingY = render.text.paddingY || 4
+      render.text.paddingX = render.text.paddingX || 0
+      render.text.paddingY = render.text.paddingY || 0
     }
 
     body.render = render

@@ -248,12 +248,12 @@ export default class Bodies {
       font: 'Arial',
       align: 'center',
       baseline: 'middle',
-      color: 'black',
+      color: '#000000',
       size: 16,
       isBold: false,
       isStroke: false,
-      paddingX: 4,
-      paddingY: 4,
+      paddingX: 0,
+      paddingY: 0,
     }
     const textRender = Common.extend(defaultTextRender, options.render?.text)
     textRender.content = text
