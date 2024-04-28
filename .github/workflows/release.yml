@@ -59,7 +59,12 @@ jobs:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
+      - name: Set version
+        run: echo VERSION=$(echo ${GITHUB_REF:10}) >> $GITHUB_ENV
+      - run: npm version ${{ env.VERSION }}
+      - run: npm run build
       - run: npm run typedoc
+      - run: npm run build-demo
       - uses: actions/upload-pages-artifact@v2
         with:
           path: ./docs

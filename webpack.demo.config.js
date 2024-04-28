@@ -27,30 +27,27 @@ ${pkg.homepage}
 License ${pkg.license}`
 
   return {
-    entry: { [name]: './demo/src/index.js' },
+    entry: { [name]: './docs/demo/src/index.ts' },
     node: false,
     devtool: false,
+    module: {
+      rules: [{ test: /\.ts$/, loader: 'ts-loader' }],
+    },
     output: {
       library: 'MatterDemo',
       libraryTarget: 'umd',
       umdNamedDefine: true,
       globalObject: 'this',
       publicPath,
-      path: resolve('./demo/js'),
+      path: resolve('./docs/demo/js'),
       filename: `[name].[contenthash:6]${minimize ? '.min' : ''}.js`,
     },
     resolve: {
       alias: {
         'matter-js': resolve(devPath),
-        'matter-ts': resolve(devPath),
-        '@rozelin/matter-ts': resolve(devPath),
-        MatterDev: resolve(devPath),
-        MatterBuild: resolve(devServer ? buildPath : devPath),
+        'matter-build': resolve(buildPath),
       },
-      extensions: ['.ts', '.js'],
-    },
-    module: {
-      rules: [{ test: /\.ts$/, loader: 'ts-loader' }],
+      extensions: ['.js', '.ts'],
     },
     optimization: {
       minimize,
@@ -89,21 +86,13 @@ License ${pkg.license}`
         __MATTER_IS_DEV__: devServer,
       }),
       new HtmlWebpackPlugin({
-        template: resolve('./demo/src/index.ejs'),
-        filename: devServer ? 'index.html' : resolve('./demo/index.html'),
+        template: resolve('./docs/demo/src/index.ejs'),
+        filename: devServer ? 'index.html' : resolve('./docs/demo/index.html'),
         inject: false,
         minify: false,
         publicPath,
       }),
-    ].concat(
-      analyze
-        ? [
-            new BundleAnalyzerPlugin({
-              openAnalyzer: true,
-            }),
-          ]
-        : []
-    ),
+    ].concat(analyze ? [new BundleAnalyzerPlugin({ openAnalyzer: true })] : []),
     devServer: {
       hot: false,
       compress: true,
@@ -112,7 +101,7 @@ License ${pkg.license}`
         overlay: true,
       },
       static: {
-        directory: resolve('./demo'),
+        directory: resolve('./docs/demo'),
       },
     },
   }

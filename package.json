@@ -2,7 +2,7 @@
   "name": "@rozelin/matter-ts",
   "version": "1.0.6",
   "license": "MIT",
-  "homepage": "https://github.com/Rozelin-dc/matter-tools",
+  "homepage": "https://rozelin-dc.github.io/matter-ts",
   "author": "Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)",
   "description": "a 2D rigid body physics engine for the web",
   "main": "build/matter.js",
@@ -12,6 +12,7 @@
     "url": "https://github.com/Rozelin-dc/matter-ts.git"
   },
   "keywords": [
+    "javascript",
     "typescript",
     "canvas",
     "html5",
@@ -49,16 +50,12 @@
     "webpack-dev-server": "^4.15.1"
   },
   "scripts": {
-    "start": "npm run dev",
-    "dev": "npm run serve -- --open",
     "serve": "webpack-dev-server --no-cache --mode development --config webpack.demo.config.js",
     "watch": "nodemon --watch webpack.demo.config.js --exec \"npm run serve\"",
     "build": "webpack --mode=production",
-    "build-alpha": "webpack --mode=production",
-    "build-dev": "webpack --mode=production",
-    "build-demo": "rm -rf ./demo/js && webpack --config webpack.demo.config.js --mode=production && webpack --config webpack.demo.config.js --mode=production",
+    "build-demo": "webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production",
     "lint": "eslint \"src/**/*.ts\"",
-    "typedoc": "typedoc --out docs src/**/*.ts",
+    "typedoc": "typedoc --out docs/typedoc src/**/*.ts",
     "type-check": "tsc --noEmit",
     "test": "jest"
   },
