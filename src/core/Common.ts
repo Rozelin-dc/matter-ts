@@ -67,7 +67,7 @@ export default class Common {
     return +date - Common._nowStartTime
   }
 
-  public static random(min: number = 1, max: number = 1): number {
+  public static random(min: number = 0, max: number = 1): number {
     return min + Common._seededRandom() * (max - min)
   }
 
