@@ -210,7 +210,7 @@ export default class Events {
     // handle Events.off(object, callback)
     if (typeof eventNames === 'function') {
       callback = eventNames
-      names = Object.keys(object.events)
+      names = Common.keys(object.events)
     } else {
       names = (eventNames as string).split(' ')
     }
@@ -273,7 +273,7 @@ export default class Events {
     E extends Partial<IEvent<string, T>>
   >(object: T, eventNames: string, event: E = {} as E): void {
     const events = object.events
-    if (events && Object.keys(events).length > 0) {
+    if (events && Common.keys(events).length > 0) {
       const names = eventNames.split(' ')
       for (const name of names) {
         const callbacks = events[name]

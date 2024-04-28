@@ -339,7 +339,7 @@ export default class Grid {
    */
   protected static _createActivePairsList(grid: IGrid): BodyPair[] {
     const gridPairs = grid.pairs
-    const pairKeys = Object.keys(gridPairs)
+    const pairKeys = Common.keys(gridPairs)
     const pairKeysLength = pairKeys.length
     const pairs: BodyPair[] = []
 

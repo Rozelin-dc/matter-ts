@@ -183,6 +183,49 @@ export default class Common {
   }
 
   /**
+   * Returns the list of keys for the given object.
+   * @method keys
+   * @param obj
+   * @return keys
+   */
+  public static keys(obj: Object): string[] {
+    if (Object.keys) {
+      return Object.keys(obj)
+    }
+
+    // avoid hasOwnProperty for performance
+    const keys: string[] = []
+    for (const key in obj) {
+      keys.push(key)
+    }
+    return keys
+  }
+
+  /**
+   * Returns the list of values for the given object.
+   * @method values
+   * @param obj
+   * @return Array of the objects property values
+   */
+  public static values<T>(obj: Record<string, T>): T[] {
+    const values: T[] = []
+
+    if (Object.keys) {
+      const keys = Object.keys(obj)
+      for (let i = 0; i < keys.length; i++) {
+        values.push(obj[keys[i]])
+      }
+      return values
+    }
+
+    // avoid hasOwnProperty for performance
+    for (const key in obj) {
+      values.push(obj[key])
+    }
+    return values
+  }
+
+  /**
    * Gets a value from `base` relative to the `path` string.
    * @param obj The base object
    * @param path The path relative to `base`, e.g. 'Foo.Bar.baz'
