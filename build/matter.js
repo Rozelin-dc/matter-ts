@@ -1,5 +1,5 @@
 /*!
- * @rozelin/matter-ts 1.1.0 by @Rozelin
+ * @rozelin/matter-ts 1.1.1 by @Rozelin
  * https://rozelin-dc.github.io/matter-ts
  * License MIT
  *
@@ -3729,7 +3729,6 @@ class Common {
                 args[i] = params[i];
             }
             for (let i = 0; i < funcs.length; i += 1) {
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 const result = funcs[i].apply(lastResult, args);
                 if (typeof result !== 'undefined') {
                     lastResult = result;
@@ -8122,7 +8121,7 @@ exports["default"] = Render;
 /***/ 147:
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.1.0","license":"MIT","homepage":"https://rozelin-dc.github.io/matter-ts","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["javascript","typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-tools":"^0.14.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-demo":"webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production","lint":"eslint \\"src/**/*.ts\\"","typedoc":"typedoc --out docs/typedoc src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
+module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.1.1","license":"MIT","homepage":"https://rozelin-dc.github.io/matter-ts","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["javascript","typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-tools":"^0.14.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-demo":"webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production","lint":"eslint \\"src/**/*.ts\\"","typedoc":"typedoc --out docs/typedoc src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
 
 /***/ })
 

@@ -1,6 +1,7 @@
 export type DeepPartial<T> = T extends object ? {
     [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
+export type ObjectLike<T = any> = Record<string | number, T>;
 type Decomp = any;
 declare enum LogLevel {
     None = 0,
@@ -77,7 +78,7 @@ export default class Common {
      * @param value
      * @return True if the object is an Object, otherwise false
      */
-    static isObject(value: unknown): value is Object;
+    static isObject(value: unknown): value is ObjectLike;
     /**
      * Returns true if the object is a HTMLElement, otherwise false.
      * @method isElement
@@ -91,14 +92,14 @@ export default class Common {
      * @param obj
      * @return keys
      */
-    static keys(obj: Object): string[];
+    static keys(obj: Record<string, unknown>): string[];
     /**
      * Returns the list of values for the given object.
      * @method values
      * @param obj
      * @return Array of the objects property values
      */
-    static values<T>(obj: Record<string, T>): T[];
+    static values<T>(obj: ObjectLike<T>): T[];
     /**
      * Gets a value from `base` relative to the `path` string.
      * @param obj The base object
@@ -124,16 +125,16 @@ export default class Common {
      * @param deep
      * @return obj extended
      */
-    static extend<T extends Object, E extends Object>(obj: T, deep?: boolean | E, ...params: E[]): T & E;
-    static extend<T extends Object>(obj: DeepPartial<T>, deep?: boolean | T, ...params: T[]): T;
-    static extend<T extends Object>(obj: T, deep?: boolean | DeepPartial<T>, ...params: DeepPartial<T>[]): T;
+    static extend<T extends ObjectLike, E extends ObjectLike>(obj: T, deep?: boolean | E, ...params: E[]): T & E;
+    static extend<T extends ObjectLike>(obj: DeepPartial<T>, deep?: boolean | T, ...params: T[]): T;
+    static extend<T extends ObjectLike>(obj: T, deep?: boolean | DeepPartial<T>, ...params: DeepPartial<T>[]): T;
     /**
      * Creates a new clone of the object, if deep is true references will also be cloned.
      * @param obj
      * @param deep
      * @return obj cloned
      */
-    static clone<T extends Object>(obj: T, deep?: boolean): T;
+    static clone<T extends ObjectLike>(obj: T, deep?: boolean): T;
     /**
      * Shows a `console.log` message only if the current `Common.logLevel` allows it.
      * The message will be prefixed with 'matter-ts' to make it easily identifiable.
@@ -148,7 +149,7 @@ export default class Common {
      * @param name The property name of the function on obj
      * @param warning The one-time message to show if the function is called
      */
-    static deprecated<T extends Record<string, Function>>(obj: T, prop: keyof T, warning: string): void;
+    static deprecated<T extends ObjectLike<Function>>(obj: T, prop: keyof T, warning: string): void;
     /**
      * Shows a `console.info` message only if the current `Common.logLevel` allows it.
      * The message will be prefixed with 'matter-ts' to make it easily identifiable.
@@ -172,8 +173,8 @@ export default class Common {
      * @param graph
      * @return Partially ordered set of vertices in topological order.
      */
-    static topologicalSort<T extends Record<any, any[]>>(graph: T): (keyof T)[];
-    protected static _topologicalSort<T extends Record<any, any[]>>(node: keyof T, visited: Record<keyof T, boolean>, temp: Record<keyof T, boolean>, graph: T, result: (keyof T)[]): void;
+    static topologicalSort<T extends ObjectLike<any[]>>(graph: T): (keyof T)[];
+    protected static _topologicalSort<T extends ObjectLike<any[]>>(node: keyof T, visited: Record<keyof T, boolean>, temp: Record<keyof T, boolean>, graph: T, result: (keyof T)[]): void;
     /**
      * Takes _n_ functions as arguments and returns a new function that calls them in order.
      * The arguments applied when calling the new function will also be applied to every function passed.
