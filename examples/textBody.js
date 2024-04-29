@@ -42,7 +42,7 @@ Example.textBody = function () {
       'Fizz',
       'Buzz',
       'line\nbreak\ntext',
-      'line\nbreak\ntext\nsample2'
+      'line\nbreak\ntext\nsample2',
     ]
     var colors = [
       '#FF0000',
@@ -52,8 +52,11 @@ Example.textBody = function () {
       '#00FFFF',
       '#FFFF00',
     ]
+    var aligns = ['left', 'center', 'right', 'start', 'end']
     return Bodies.text(x, y, Common.choose(texts), {
-      render: { text: { color: Common.choose(colors) } },
+      render: {
+        text: { color: Common.choose(colors), align: Common.choose(aligns) },
+      },
     })
   })
 
