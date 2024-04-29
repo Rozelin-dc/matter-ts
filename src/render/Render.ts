@@ -6,6 +6,7 @@ import Common from '../core/Common'
 import Engine, { IEngine } from '../core/Engine'
 import Events, { RenderEventFunction, RenderEventName } from '../core/Events'
 import Mouse, { IMouse } from '../core/Mouse'
+import Bodies from '../factory/Bodies'
 import Bounds, { IBounds } from '../geometry/Bounds'
 import Vector, { IVector } from '../geometry/Vector'
 
@@ -1261,12 +1262,13 @@ export default class Render {
 
           if (Body.isTextRender(part.render)) {
             // render text
+            const lines = part.render.text.content.split('\n')
+            context.textBaseline = lines.length % 2 === 0 ? 'top' : 'middle'
             context.font = `${part.render.text.isBold ? 'bold ' : ''}${
               part.render.text.size
             }px ${part.render.text.font}`
             context.fillStyle = part.render.text.color
             context.textAlign = part.render.text.align
-            context.textBaseline = part.render.text.baseline
 
             context.translate(
               part.position.x + part.render.text.paddingX,
@@ -1274,10 +1276,38 @@ export default class Render {
             )
             context.rotate(part.angle)
 
-            if (part.render.text.isStroke) {
-              context.strokeText(part.render.text.content, 0, 0)
-            } else {
-              context.fillText(part.render.text.content, 0, 0)
+            const maxTextWidth = Bodies.measureMaxTextWidth(
+              part.render.text.content,
+              part.render.text.font,
+              part.render.text.size
+            )
+            let x: number
+            switch (part.render.text.align) {
+              case 'left':
+              case 'start':
+                x = -maxTextWidth / 2
+                break
+              case 'end':
+              case 'right':
+                x = maxTextWidth / 2
+                break
+              default:
+                x = 0
+            }
+            for (let i = 0; i < lines.length; i++) {
+              if (part.render.text.isStroke) {
+                context.strokeText(
+                  lines[i],
+                  x,
+                  (i - Math.floor(lines.length / 2)) * part.render.text.size
+                )
+              } else {
+                context.fillText(
+                  lines[i],
+                  x,
+                  (i - Math.floor(lines.length / 2)) * part.render.text.size
+                )
+              }
             }
 
             // revert translation, hopefully faster than save / restore

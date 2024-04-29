@@ -247,7 +247,6 @@ export default class Bodies {
       content: text,
       font: 'Arial',
       align: 'center',
-      baseline: 'middle',
       color: '#000000',
       size: 16,
       isBold: false,
@@ -267,14 +266,45 @@ export default class Bodies {
       textRender.font
     }`
     context.textAlign = textRender.align
-    context.textBaseline = textRender.baseline
-    const textWidth = context?.measureText(text).width + textRender.paddingX * 2
-    const textHeight = text.split('\n').length * textRender.size + textRender.paddingY * 2
+    const textWidth =
+      Bodies.measureMaxTextWidth(text, textRender.font, textRender.size) +
+      textRender.paddingX * 2
+    const textHeight =
+      text.split('\n').length * textRender.size + textRender.paddingY * 2
 
     return Bodies.rectangle(x, y, textWidth, textHeight, {
       ...options,
       render: { ...options.render, text: textRender },
     })
+  }
+
+  /**
+   * Measure max text width for a given font.
+   * @method measureMaxTextWidth
+   * @param text
+   * @param font
+   * @param size
+   */
+  public static measureMaxTextWidth(
+    text: string,
+    font: string,
+    size: number
+  ): number {
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
+    if (!context) {
+      throw new Error('Failed to create canvas context')
+    }
+    context.font = `${size}px ${font}`
+    const lines = text.split('\n')
+    let maxWidth = 0
+    for (const line of lines) {
+      const width = context.measureText(line).width
+      if (width > maxWidth) {
+        maxWidth = width
+      }
+    }
+    return maxWidth
   }
 
   /**

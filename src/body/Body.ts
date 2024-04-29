@@ -438,11 +438,6 @@ export interface IBodyTextRender extends IBodyCommonRender {
     align: CanvasTextAlign
 
     /**
-     * @default 'middle'
-     */
-    baseline: CanvasTextBaseline
-
-    /**
      * @default '#000000'
      */
     color: string
@@ -658,7 +653,6 @@ export default class Body {
     if (Body.isTextRender(render) && render.text.content) {
       render.text.font = render.text.font || 'Arial'
       render.text.align = render.text.align || 'center'
-      render.text.baseline = render.text.baseline || 'middle'
       render.text.color = render.text.color || '#000000'
       render.text.size = render.text.size || 16
       render.text.isBold = render.text.isBold || false
