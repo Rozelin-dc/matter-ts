@@ -6,6 +6,7 @@ import Common from '../core/Common'
 import Engine, { IEngine } from '../core/Engine'
 import Events, { RenderEventFunction, RenderEventName } from '../core/Events'
 import Mouse, { IMouse } from '../core/Mouse'
+import Bodies from '../factory/Bodies'
 import Bounds, { IBounds } from '../geometry/Bounds'
 import Vector, { IVector } from '../geometry/Vector'
 
@@ -1190,11 +1191,7 @@ export default class Render {
           context.globalAlpha = part.render.opacity
         }
 
-        if (
-          part.render.sprite &&
-          part.render.sprite.texture &&
-          !options.wireframes
-        ) {
+        if (Body.isSpriteRender(part.render) && !options.wireframes) {
           // part sprite
           const sprite = part.render.sprite
           const texture = Render._getTexture(render, sprite.texture!)
@@ -1261,6 +1258,64 @@ export default class Render {
             context.lineWidth = 1
             context.strokeStyle = render.options.wireframeStrokeStyle
             context.stroke()
+          }
+
+          if (Body.isTextRender(part.render)) {
+            // render text
+            const lines = part.render.text.content.split('\n')
+            context.textBaseline = lines.length % 2 === 0 ? 'top' : 'middle'
+            context.font = `${part.render.text.isBold ? 'bold ' : ''}${
+              part.render.text.size
+            }px ${part.render.text.font}`
+            context.fillStyle = part.render.text.color
+            context.textAlign = part.render.text.align
+
+            context.translate(
+              part.position.x + part.render.text.paddingX,
+              part.position.y + part.render.text.paddingY
+            )
+            context.rotate(part.angle)
+
+            const maxTextWidth = Bodies.measureMaxTextWidth(
+              part.render.text.content,
+              part.render.text.font,
+              part.render.text.size
+            )
+            let x: number
+            switch (part.render.text.align) {
+              case 'left':
+              case 'start':
+                x = -maxTextWidth / 2
+                break
+              case 'end':
+              case 'right':
+                x = maxTextWidth / 2
+                break
+              default:
+                x = 0
+            }
+            for (let i = 0; i < lines.length; i++) {
+              if (part.render.text.isStroke) {
+                context.strokeText(
+                  lines[i],
+                  x,
+                  (i - Math.floor(lines.length / 2)) * part.render.text.size
+                )
+              } else {
+                context.fillText(
+                  lines[i],
+                  x,
+                  (i - Math.floor(lines.length / 2)) * part.render.text.size
+                )
+              }
+            }
+
+            // revert translation, hopefully faster than save / restore
+            context.rotate(-part.angle)
+            context.translate(
+              -part.position.x - part.render.text.paddingX,
+              -part.position.y - part.render.text.paddingY
+            )
           }
         }
 
@@ -1840,7 +1895,7 @@ export default class Render {
 
       switch (item.type) {
         case 'body':
-        // render body selections
+          // render body selections
           const bounds = item.bounds
           context.beginPath()
           context.rect(
@@ -1855,7 +1910,7 @@ export default class Render {
           break
 
         case 'constraint':
-        // render constraint selections
+          // render constraint selections
           let point = item.pointA
           if (item.bodyA) {
             point = item.pointB

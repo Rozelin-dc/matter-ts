@@ -341,19 +341,18 @@ export interface IBody {
   _original: IBodyOriginal | null
 }
 
-export interface IBodyRender {
+export type IBodyRender =
+  | IBodyCommonRender
+  | IBodySpriteRender
+  | IBodyTextRender
+
+export interface IBodyCommonRender {
   /**
    * A flag that indicates if the body should be rendered.
    *
    * @default true
    */
   visible: boolean
-
-  /**
-   * An `Object` that defines the sprite properties to use when rendering, if any.
-   *
-   */
-  sprite?: IBodyRenderSprite
 
   /**
      * A String that defines the fill style to use when rendering the body (if a sprite is not defined). It is the same as when using a canvas, so it accepts CSS style property values.
@@ -379,40 +378,95 @@ export interface IBodyRender {
   opacity: number
 }
 
-export interface IBodyRenderSprite {
+export interface IBodySpriteRender extends IBodyCommonRender {
   /**
-   * An `String` that defines the path to the image to use as the sprite texture, if any.
+   * An `Object` that defines the sprite properties to use when rendering, if any.
    *
    */
-  texture: string
+  sprite: {
+    /**
+     * An `String` that defines the path to the image to use as the sprite texture, if any.
+     *
+     */
+    texture: string
 
-  /**
-   * A `Number` that defines the scaling in the x-axis for the sprite, if any.
-   *
-   * @default 1
-   */
-  xScale: number
+    /**
+     * A `Number` that defines the scaling in the x-axis for the sprite, if any.
+     *
+     * @default 1
+     */
+    xScale: number
 
-  /**
-   * A `Number` that defines the scaling in the y-axis for the sprite, if any.
-   *
-   * @default 1
-   */
-  yScale: number
+    /**
+     * A `Number` that defines the scaling in the y-axis for the sprite, if any.
+     *
+     * @default 1
+     */
+    yScale: number
 
-  /**
-   * A `Number` that defines the offset in the x-axis for the sprite (normalised by texture width).
-   *
-   * @default 0
-   */
-  xOffset: number
+    /**
+     * A `Number` that defines the offset in the x-axis for the sprite (normalised by texture width).
+     *
+     * @default 0
+     */
+    xOffset: number
 
-  /**
-   * A `Number` that defines the offset in the y-axis for the sprite (normalised by texture height).
-   *
-   * @default 0
-   */
-  yOffset: number
+    /**
+     * A `Number` that defines the offset in the y-axis for the sprite (normalised by texture height).
+     *
+     * @default 0
+     */
+    yOffset: number
+  }
+}
+
+export interface IBodyTextRender extends IBodyCommonRender {
+  text: {
+    /**
+     * Text body to be displayed
+     */
+    content: string
+
+    /**
+     * @default 'Arial'
+     */
+    font: string
+
+    /**
+     * @default 'center'
+     */
+    align: CanvasTextAlign
+
+    /**
+     * @default '#000000'
+     */
+    color: string
+
+    /**
+     * @default 16
+     */
+    size: number
+
+    /**
+     * @default false
+     */
+    isBold: boolean
+
+    /**
+     * @default false
+     */
+    isStroke: boolean
+
+    /**
+     * @default 0
+     */
+    paddingX: number
+
+    /**
+     * @default 0
+     */
+    paddingY: number
+  }
 }
 
 interface IBodyChamfer {
@@ -571,24 +625,43 @@ export default class Body {
     })
 
     // render properties
+    const render = body.render as IBodyRender
     const defaultFillStyle = body.isStatic
       ? '#14151f'
       : Common.choose(['#f19648', '#f5d259', '#f55a3c', '#063e7b', '#ececd1'])
     const defaultStrokeStyle = body.isStatic ? '#555' : '#ccc'
     const defaultLineWidth =
       body.isStatic && body.render.fillStyle === null ? 1 : 0
-    body.render.fillStyle = body.render.fillStyle || defaultFillStyle
-    body.render.strokeStyle = body.render.strokeStyle || defaultStrokeStyle
-    body.render.lineWidth = body.render.lineWidth || defaultLineWidth
+    render.fillStyle = body.render.fillStyle || defaultFillStyle
+    render.strokeStyle = body.render.strokeStyle || defaultStrokeStyle
+    render.lineWidth = body.render.lineWidth || defaultLineWidth
 
-    if (body.render.sprite) {
-      body.render.sprite.xOffset +=
+    if (Body.isSpriteRender(render)) {
+      render.sprite.xScale = render.sprite.xScale || 1
+      render.sprite.yScale = render.sprite.yScale || 1
+      render.sprite.xOffset = render.sprite.xOffset || 0
+      render.sprite.yOffset = render.sprite.yOffset || 0
+
+      render.sprite.xOffset +=
         -(body.bounds!.min.x - body.position.x) /
         (body.bounds!.max.x - body.bounds!.min.x)
-      body.render.sprite.yOffset +=
+      render.sprite.yOffset +=
         -(body.bounds!.min.y - body.position.y) /
         (body.bounds!.max.y - body.bounds!.min.y)
     }
+
+    if (Body.isTextRender(render) && render.text.content) {
+      render.text.font = render.text.font || 'Arial'
+      render.text.align = render.text.align || 'center'
+      render.text.color = render.text.color || '#000000'
+      render.text.size = render.text.size || 16
+      render.text.isBold = render.text.isBold || false
+      render.text.isStroke = render.text.isStroke || false
+      render.text.paddingX = render.text.paddingX || 0
+      render.text.paddingY = render.text.paddingY || 0
+    }
+
+    body.render = render
   }
 
   /**
@@ -1400,5 +1473,27 @@ export default class Body {
     properties.centre = Vector.div(properties.centre, properties.mass)
 
     return properties
+  }
+
+  /**
+   * Returns true if the render is a IBodySpriteRender, otherwise false.
+   * @method isSpriteRender
+   * @param render
+   * @return True if the render is a IBodySpriteRender, otherwise false
+   */
+  public static isSpriteRender(
+    render: IBodyRender
+  ): render is IBodySpriteRender {
+    return 'sprite' in render
+  }
+
+  /**
+   * Returns true if the render is a IBodyTextRender, otherwise false.
+   * @method isTextRender
+   * @param render
+   * @return True if the render is a IBodyTextRender, otherwise false
+   */
+  public static isTextRender(render: IBodyRender): render is IBodyTextRender {
+    return 'text' in render
   }
 }

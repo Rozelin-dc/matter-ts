@@ -1,4 +1,4 @@
-import Body, { IBody } from '../body/Body'
+import Body, { IBody, IBodyTextRender } from '../body/Body'
 import Common, { DeepPartial } from '../core/Common'
 import Bounds from '../geometry/Bounds'
 import Vector from '../geometry/Vector'
@@ -224,6 +224,87 @@ export default class Bodies {
     }
 
     return Body.create(Common.extend<DeepPartial<IBody>>({}, polygon, options))
+  }
+
+  /**
+   * Creates a new rectangle body that fits the letters of the given text.
+   * @method text
+   * @param x
+   * @param y
+   * @param text
+   * @param options
+   * @return A new rectangle body with the given text
+   */
+  public static text(
+    x: number,
+    y: number,
+    text: string,
+    options: DeepPartial<Omit<IBody, 'render'>> & {
+      render?: Partial<IBodyTextRender>
+    } = {}
+  ): IBody {
+    const defaultTextRender: IBodyTextRender['text'] = {
+      content: text,
+      font: 'Arial',
+      align: 'center',
+      color: '#000000',
+      size: 16,
+      isBold: false,
+      isStroke: false,
+      paddingX: 0,
+      paddingY: 0,
+    }
+    const textRender = Common.extend(defaultTextRender, options.render?.text)
+    textRender.content = text
+
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
+    if (!context) {
+      throw new Error('Failed to create canvas context')
+    }
+    context.font = `${textRender.isBold ? 'bold' : ''} ${textRender.size}px ${
+      textRender.font
+    }`
+    context.textAlign = textRender.align
+    const textWidth =
+      Bodies.measureMaxTextWidth(text, textRender.font, textRender.size) +
+      textRender.paddingX * 2
+    const textHeight =
+      text.split('\n').length * textRender.size + textRender.paddingY * 2
+
+    return Bodies.rectangle(x, y, textWidth, textHeight, {
+      ...options,
+      render: { ...options.render, text: textRender },
+    })
+  }
+
+  /**
+   * Measure max text width for a given font.
+   * @method measureMaxTextWidth
+   * @param text
+   * @param font
+   * @param size
+   */
+  public static measureMaxTextWidth(
+    text: string,
+    font: string,
+    size: number
+  ): number {
+    const canvas = document.createElement('canvas')
+    const context = canvas.getContext('2d')
+    if (!context) {
+      throw new Error('Failed to create canvas context')
+    }
+    context.font = `${size}px ${font}`
+    const lines = text.split('\n')
+    let maxWidth = 0
+    for (const line of lines) {
+      const width = context.measureText(line).width
+      if (width > maxWidth) {
+        maxWidth = width
+      }
+    }
+    return maxWidth
   }
 
   /**

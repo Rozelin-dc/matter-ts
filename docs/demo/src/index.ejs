@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="robots" content="noindex">
-    <title>Matter.js Demo</title>
+    <title>Matter.ts Demo</title>
 
     <style type="text/css">
       * {
@@ -47,14 +47,17 @@
         opacity: 0.5;
         background: transparent !important;
       }
+
+      @media only screen and (min-width: 1300px) {
+        /* reduce hit testing when using matter-tools */
+        .matter-demo canvas {
+          position: relative;
+          z-index: 20;
+        }
+      }
     </style>
   </head>
-  <body>
-    <script src="./js/matter-demo.main.5754e1.min.js"></script>
-    <script src="./js/matter-demo.matter-tools.97f38a.min.js"></script>
-    <script src="./js/matter-demo.matter-wrap.dbda1f.min.js"></script>
-    <script src="./js/matter-demo.pathseg.cf21c2.min.js"></script>
-    <script src="./js/matter-demo.poly-decomp.c3d015.min.js"></script>
-    <script src="./js/matter-demo.6283b1.min.js"></script>
+  <body><% for (var chunk in htmlWebpackPlugin.files.js) { %>
+    <script src="<%= htmlWebpackPlugin.files.js[chunk] %>"></script><% } %>
   </body>
 </html>
