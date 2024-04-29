@@ -12,24 +12,25 @@ export type MouseEventName = 'mousedown' | 'mousemove' | 'mouseup' | 'startdrag'
 export type EngineEventName = 'afterUpdate' | 'beforeUpdate' | 'collisionActive' | 'collisionEnd' | 'collisionStart' | 'beforeSolve';
 export type RunnerEventName = 'beforeTick' | 'tick' | 'afterTick' | 'afterUpdate' | 'beforeUpdate';
 export type RenderEventName = 'beforeRender' | 'afterRender';
-export interface IEvent<T> {
+export interface IEvent<S extends string, T> {
     /**
      * The name of the event
      */
-    name: string;
+    name: S;
     /**
      * The source object of the event
      */
     source: T;
 }
-interface ICompositeEvent extends IEvent<IComposite> {
+type IBodyEvent = IEvent<BodyEventName, IBody>;
+interface ICompositeEvent extends IEvent<CompositeEventName, IComposite> {
     object: any;
 }
-interface IMouseEvent extends IEvent<IMouseConstraint> {
+interface IMouseEvent extends IEvent<MouseEventName, IMouseConstraint> {
     mouse: IMouse;
     body?: IBody;
 }
-interface IEngineEvent extends IEvent<IEngine> {
+interface IEngineEvent extends IEvent<EngineEventName, IEngine> {
     /**
      * List of affected pairs
      */
@@ -43,20 +44,20 @@ interface IEngineEvent extends IEvent<IEngine> {
      */
     delta: number;
 }
-interface IRunnerEvent extends IEvent<IRunner> {
+interface IRunnerEvent extends IEvent<RunnerEventName, IRunner> {
     /**
      * The timestamp of the event
      */
     timestamp: number;
 }
-interface IRenderEvent extends IEvent<IRunner> {
+interface IRenderEvent extends IEvent<RenderEventName, IRunner> {
     /**
      * The timestamp of the event
      */
     timestamp?: number;
 }
 type EventFunction<T> = (event: T) => void;
-export type BodyEventFunction = EventFunction<IEvent<IBody>>;
+export type BodyEventFunction = EventFunction<IBodyEvent>;
 export type CompositeEventFunction = EventFunction<ICompositeEvent>;
 export type MouseEventFunction = EventFunction<IMouseEvent>;
 export type EngineEventFunction = EventFunction<IEngineEvent>;
@@ -101,7 +102,7 @@ export default class Events {
      * @param eventNames
      * @param event
      */
-    static trigger(body: IBody, eventName: BodyEventName, event?: Partial<IEvent<IBody>>): void;
+    static trigger(body: IBody, eventName: BodyEventName, event?: Partial<IBodyEvent>): void;
     static trigger(composite: IComposite, eventName: CompositeEventName, event: Partial<ICompositeEvent>): void;
     static trigger(mouse: IMouseConstraint, eventName: MouseEventName, event: Partial<IMouseEvent>): void;
     static trigger(engine: IEngine, eventName: EngineEventName, event: Partial<IEngineEvent>): void;

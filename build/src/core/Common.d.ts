@@ -70,7 +70,13 @@ export default class Common {
      * @param obj
      * @return True if the object is an array, otherwise false
      */
-    static isArray<T>(obj: T | T[]): obj is T[];
+    static isArray(obj: unknown): obj is any[];
+    /**
+     * Returns true if the object is an Object.
+     * @method isObject
+     * @param value
+     * @return True if the object is an Object, otherwise false
+     */
     static isObject(value: unknown): value is Object;
     /**
      * Returns true if the object is a HTMLElement, otherwise false.
@@ -79,6 +85,20 @@ export default class Common {
      * @return True if the object is a HTMLElement, otherwise false
      */
     static isElement(obj: any): obj is HTMLElement;
+    /**
+     * Returns the list of keys for the given object.
+     * @method keys
+     * @param obj
+     * @return keys
+     */
+    static keys(obj: Object): string[];
+    /**
+     * Returns the list of values for the given object.
+     * @method values
+     * @param obj
+     * @return Array of the objects property values
+     */
+    static values<T>(obj: Record<string, T>): T[];
     /**
      * Gets a value from `base` relative to the `path` string.
      * @param obj The base object

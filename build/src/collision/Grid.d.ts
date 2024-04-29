@@ -16,7 +16,7 @@ export interface IGrid {
      */
     bucketHeight: number;
 }
-type BodyPair = [IBody, IBody, number];
+export type BodyPair = [IBody, IBody, number];
 export interface IRegion {
     id: string;
     startCol: number;
@@ -134,4 +134,3 @@ export default class Grid {
      */
     protected static _createActivePairsList(grid: IGrid): BodyPair[];
 }
-export {};

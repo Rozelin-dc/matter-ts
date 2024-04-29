@@ -301,18 +301,14 @@ export interface IBody {
     region?: IRegion;
     _original: IBodyOriginal | null;
 }
-interface IBodyRender {
+export type IBodyRender = IBodyCommonRender | IBodySpriteRender | IBodyTextRender;
+export interface IBodyCommonRender {
     /**
      * A flag that indicates if the body should be rendered.
      *
      * @default true
      */
     visible: boolean;
-    /**
-     * An `Object` that defines the sprite properties to use when rendering, if any.
-     *
-     */
-    sprite: IBodyRenderSprite;
     /**
        * A String that defines the fill style to use when rendering the body (if a sprite is not defined). It is the same as when using a canvas, so it accepts CSS style property values.
        Default: a random colour
@@ -330,36 +326,82 @@ interface IBodyRender {
     strokeStyle: string;
     opacity: number;
 }
-interface IBodyRenderSprite {
+export interface IBodySpriteRender extends IBodyCommonRender {
     /**
-     * An `String` that defines the path to the image to use as the sprite texture, if any.
+     * An `Object` that defines the sprite properties to use when rendering, if any.
      *
      */
-    texture?: string;
-    /**
-     * A `Number` that defines the scaling in the x-axis for the sprite, if any.
-     *
-     * @default 1
-     */
-    xScale: number;
-    /**
-     * A `Number` that defines the scaling in the y-axis for the sprite, if any.
-     *
-     * @default 1
-     */
-    yScale: number;
-    /**
-     * A `Number` that defines the offset in the x-axis for the sprite (normalised by texture width).
-     *
-     * @default 0
-     */
-    xOffset: number;
-    /**
-     * A `Number` that defines the offset in the y-axis for the sprite (normalised by texture height).
-     *
-     * @default 0
-     */
-    yOffset: number;
+    sprite: {
+        /**
+         * An `String` that defines the path to the image to use as the sprite texture, if any.
+         *
+         */
+        texture: string;
+        /**
+         * A `Number` that defines the scaling in the x-axis for the sprite, if any.
+         *
+         * @default 1
+         */
+        xScale: number;
+        /**
+         * A `Number` that defines the scaling in the y-axis for the sprite, if any.
+         *
+         * @default 1
+         */
+        yScale: number;
+        /**
+         * A `Number` that defines the offset in the x-axis for the sprite (normalised by texture width).
+         *
+         * @default 0
+         */
+        xOffset: number;
+        /**
+         * A `Number` that defines the offset in the y-axis for the sprite (normalised by texture height).
+         *
+         * @default 0
+         */
+        yOffset: number;
+    };
+}
+export interface IBodyTextRender extends IBodyCommonRender {
+    text: {
+        /**
+         * Text body to be displayed
+         */
+        content: string;
+        /**
+         * @default 'Arial'
+         */
+        font: string;
+        /**
+         * @default 'center'
+         */
+        align: CanvasTextAlign;
+        /**
+         * @default '#000000'
+         */
+        color: string;
+        /**
+         * @default 16
+         */
+        size: number;
+        /**
+         * @default false
+         */
+        isBold: boolean;
+        /**
+         * @default false
+         */
+        isStroke: boolean;
+        /**
+         * @default 0
+         */
+        paddingX: number;
+        /**
+         * @default 0
+         */
+        paddingY: number;
+    };
 }
 interface IBodyChamfer {
     radius: number;
@@ -376,12 +418,9 @@ interface IBodyOriginal {
     inverseMass: number;
     inverseInertia: number;
 }
-type DefaultBody = Omit<IBody, 'bounds' | 'axes' | 'inverseInertia' | 'inverseMass' | 'positionPrev' | 'parent' | 'chamfer' | 'render'> & {
-    render: Partial<IBodyRender> & {
-        sprite: IBodyRenderSprite;
-    };
-};
-type InitBody = DefaultBody & Partial<Pick<IBody, 'bounds' | 'axes' | 'inverseInertia' | 'inverseMass' | 'positionPrev' | 'parent' | 'chamfer'>>;
+type InitBody = Omit<IBody, 'bounds' | 'axes' | 'inverseInertia' | 'inverseMass' | 'positionPrev' | 'parent' | 'chamfer' | 'render'> & {
+    render: Partial<IBodyRender>;
+} & Partial<Pick<IBody, 'bounds' | 'axes' | 'inverseInertia' | 'inverseMass' | 'positionPrev' | 'parent' | 'chamfer'>>;
 /**
  * The `Matter.Body` module contains methods for creating and manipulating rigid bodies.
  * For creating bodies with common configurations such as rectangles, circles and other polygons see the module `Matter.Bodies`.
@@ -432,9 +471,9 @@ export default class Body {
      * Given a property and a value (or map of), sets the property(s) on the body, using the appropriate setter functions if they exist.
      * Prefer to use the actual setter functions in performance critical situations.
      * @method set
-     * @param {body} body
-     * @param {} settings A property name (or map of properties and values) to set on the body.
-     * @param {} value The value to set if `settings` is a single property name.
+     * @param body
+     * @param settings A property name (or map of properties and values) to set on the body.
+     * @param value The value to set if `settings` is a single property name.
      */
     static set(body: IBody, settings: Partial<IBody>): void;
     static set<K extends keyof IBody>(body: IBody, settings: K | 'centre', value: IBody[K]): void;
@@ -456,8 +495,8 @@ export default class Body {
     /**
      * Sets the density of the body. Mass and inertia are automatically updated to reflect the change.
      * @method setDensity
-     * @param {body} body
-     * @param {number} density
+     * @param body
+     * @param density
      */
     static setDensity(body: IBody, density: number): void;
     /**
@@ -540,8 +579,8 @@ export default class Body {
     /**
      * Gets the current linear velocity of the body.
      * @method getVelocity
-     * @param {body} body
-     * @return {vector} velocity
+     * @param body
+     * @return velocity
      */
     static getVelocity(body: IBody): IVector;
     /**
@@ -659,5 +698,19 @@ export default class Body {
      * @param body
      */
     private static _totalProperties;
+    /**
+     * Returns true if the render is a IBodySpriteRender, otherwise false.
+     * @method isSpriteRender
+     * @param render
+     * @return True if the render is a IBodySpriteRender, otherwise false
+     */
+    static isSpriteRender(render: IBodyRender): render is IBodySpriteRender;
+    /**
+     * Returns true if the render is a IBodyTextRender, otherwise false.
+     * @method isTextRender
+     * @param render
+     * @return True if the render is a IBodyTextRender, otherwise false
+     */
+    static isTextRender(render: IBodyRender): render is IBodyTextRender;
 }
 export {};

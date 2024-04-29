@@ -86,7 +86,7 @@ export interface IEngine {
     render?: IRender;
     mouse?: IMouse;
 }
-interface IEngineTiming {
+export interface IEngineTiming {
     /**
      * A `Number` that specifies the global scaling factor of time for all bodies.
      * A value of `0` freezes the simulation.
@@ -213,4 +213,3 @@ export default class Engine {
      */
     static run: typeof Runner.run;
 }
-export {};

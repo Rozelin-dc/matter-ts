@@ -1,4 +1,4 @@
-import { IBody } from '../body/Body';
+import { IBody, IBodyTextRender } from '../body/Body';
 import { DeepPartial } from '../core/Common';
 import { IVertices } from '../geometry/Vertices';
 /**
@@ -62,6 +62,26 @@ export default class Bodies {
      * @return A new regular polygon body
      */
     static polygon(x: number, y: number, sides: number, radius: number, options?: DeepPartial<IBody>): IBody;
+    /**
+     * Creates a new rectangle body that fits the letters of the given text.
+     * @method text
+     * @param x
+     * @param y
+     * @param text
+     * @param options
+     * @return A new rectangle body with the given text
+     */
+    static text(x: number, y: number, text: string, options?: DeepPartial<Omit<IBody, 'render'>> & {
+        render?: Partial<IBodyTextRender>;
+    }): IBody;
+    /**
+     * Measure max text width for a given font.
+     * @method measureMaxTextWidth
+     * @param text
+     * @param font
+     * @param size
+     */
+    static measureMaxTextWidth(text: string, font: string, size: number): number;
     /**
      * Utility to create a compound body based on set(s) of vertices.
      *

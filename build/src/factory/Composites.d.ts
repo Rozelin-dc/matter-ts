@@ -89,17 +89,17 @@ export default class Composites {
      * and the [cloth example](https://github.com/liabru/matter-js/blob/master/examples/cloth.js), follow those instead as this function is deprecated here.
      * @deprecated moved to softBody and cloth examples
      * @method softBody
-     * @param {number} x Starting position in X.
-     * @param {number} y Starting position in Y.
-     * @param {number} columns
-     * @param {number} rows
-     * @param {number} columnGap
-     * @param {number} rowGap
-     * @param {boolean} crossBrace
-     * @param {number} particleRadius
-     * @param {} particleOptions
-     * @param {} constraintOptions
-     * @return {composite} A new composite softBody
+     * @param x Starting position in X.
+     * @param y Starting position in Y.
+     * @param columns
+     * @param rows
+     * @param columnGap
+     * @param rowGap
+     * @param crossBrace
+     * @param particleRadius
+     * @param particleOptions
+     * @param constraintOptions
+     * @return A new composite softBody
      */
     static softBody(x: number, y: number, columns: number, rows: number, columnGap: number, rowGap: number, crossBrace: boolean, particleRadius: number, particleOptions: DeepPartial<IBody>, constraintOptions: ConstraintOptions): IComposite;
 }

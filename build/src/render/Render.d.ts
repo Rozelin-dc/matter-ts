@@ -57,7 +57,7 @@ export interface IRender {
     currentBackground?: string;
     events: Record<RenderEventName, RenderEventFunction[]>;
 }
-interface IRenderOptions {
+export interface IRenderOptions {
     /**
      * The target width in pixels of the `render.canvas` to be created.
      * See also the `options.pixelRatio` property to change render quality.
@@ -244,7 +244,7 @@ interface IRenderOptions {
      */
     showMousePosition: boolean;
 }
-interface IRenderTiming {
+export interface IRenderTiming {
     historySize: number;
     delta: number;
     deltaHistory: number[];
@@ -257,7 +257,7 @@ interface IRenderTiming {
     engineElapsedHistory: number[];
     elapsedHistory: number[];
 }
-interface IInspector {
+export interface IInspector {
     selected: {
         data: IBody | IConstraint;
     }[];
@@ -340,7 +340,7 @@ export default class Render {
     /**
      * Applies viewport transforms based on `render.bounds` to a render context.
      * @method startViewTransform
-     * @param {render} render
+     * @param render
      */
     static startViewTransform(render: IRender): void;
     /**
@@ -540,4 +540,3 @@ export default class Render {
      */
     protected static _applyBackground(render: IRender, background: string): void;
 }
-export {};

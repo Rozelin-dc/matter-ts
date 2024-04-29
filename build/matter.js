@@ -1,6 +1,6 @@
 /*!
- * @rozelin/matter-ts 1.0.6 by @Rozelin
- * https://github.com/Rozelin-dc/matter-tools
+ * @rozelin/matter-ts 1.1.0 by @Rozelin
+ * https://rozelin-dc.github.io/matter-ts
  * License MIT
  *
  * The MIT License (MIT)
@@ -113,12 +113,6 @@ class Body {
             render: {
                 visible: true,
                 opacity: 1,
-                sprite: {
-                    xScale: 1,
-                    yScale: 1,
-                    xOffset: 0,
-                    yOffset: 0,
-                },
             },
             events: {},
             circleRadius: 0,
@@ -162,20 +156,38 @@ class Body {
             inertia: options.inertia || body.inertia,
         });
         // render properties
+        const render = body.render;
         const defaultFillStyle = body.isStatic
             ? '#14151f'
             : Common_1.default.choose(['#f19648', '#f5d259', '#f55a3c', '#063e7b', '#ececd1']);
         const defaultStrokeStyle = body.isStatic ? '#555' : '#ccc';
         const defaultLineWidth = body.isStatic && body.render.fillStyle === null ? 1 : 0;
-        body.render.fillStyle = body.render.fillStyle || defaultFillStyle;
-        body.render.strokeStyle = body.render.strokeStyle || defaultStrokeStyle;
-        body.render.lineWidth = body.render.lineWidth || defaultLineWidth;
-        body.render.sprite.xOffset +=
-            -(body.bounds.min.x - body.position.x) /
-                (body.bounds.max.x - body.bounds.min.x);
-        body.render.sprite.yOffset +=
-            -(body.bounds.min.y - body.position.y) /
-                (body.bounds.max.y - body.bounds.min.y);
+        render.fillStyle = body.render.fillStyle || defaultFillStyle;
+        render.strokeStyle = body.render.strokeStyle || defaultStrokeStyle;
+        render.lineWidth = body.render.lineWidth || defaultLineWidth;
+        if (Body.isSpriteRender(render)) {
+            render.sprite.xScale = render.sprite.xScale || 1;
+            render.sprite.yScale = render.sprite.yScale || 1;
+            render.sprite.xOffset = render.sprite.xOffset || 0;
+            render.sprite.yOffset = render.sprite.yOffset || 0;
+            render.sprite.xOffset +=
+                -(body.bounds.min.x - body.position.x) /
+                    (body.bounds.max.x - body.bounds.min.x);
+            render.sprite.yOffset +=
+                -(body.bounds.min.y - body.position.y) /
+                    (body.bounds.max.y - body.bounds.min.y);
+        }
+        if (Body.isTextRender(render) && render.text.content) {
+            render.text.font = render.text.font || 'Arial';
+            render.text.align = render.text.align || 'center';
+            render.text.color = render.text.color || '#000000';
+            render.text.size = render.text.size || 16;
+            render.text.isBold = render.text.isBold || false;
+            render.text.isStroke = render.text.isStroke || false;
+            render.text.paddingX = render.text.paddingX || 0;
+            render.text.paddingY = render.text.paddingY || 0;
+        }
+        body.render = render;
     }
     /**
      * Returns the next unique group index for which bodies will collide.
@@ -329,8 +341,8 @@ class Body {
     /**
      * Sets the density of the body. Mass and inertia are automatically updated to reflect the change.
      * @method setDensity
-     * @param {body} body
-     * @param {number} density
+     * @param body
+     * @param density
      */
     static setDensity(body, density) {
         Body.setMass(body, density * body.area);
@@ -536,8 +548,8 @@ class Body {
     /**
      * Gets the current linear velocity of the body.
      * @method getVelocity
-     * @param {body} body
-     * @return {vector} velocity
+     * @param body
+     * @return velocity
      */
     static getVelocity(body) {
         const timeScale = Body._baseDelta / body.deltaTime;
@@ -823,6 +835,24 @@ class Body {
         }
         properties.centre = Vector_1.default.div(properties.centre, properties.mass);
         return properties;
+    }
+    /**
+     * Returns true if the render is a IBodySpriteRender, otherwise false.
+     * @method isSpriteRender
+     * @param render
+     * @return True if the render is a IBodySpriteRender, otherwise false
+     */
+    static isSpriteRender(render) {
+        return 'sprite' in render;
+    }
+    /**
+     * Returns true if the render is a IBodyTextRender, otherwise false.
+     * @method isTextRender
+     * @param render
+     * @return True if the render is a IBodyTextRender, otherwise false
+     */
+    static isTextRender(render) {
+        return 'text' in render;
     }
 }
 Body._timeCorrection = true;
@@ -1655,8 +1685,8 @@ class Contact {
     /**
      * Creates a new contact.
      * @method create
-     * @param {vertex} vertex
-     * @return {contact} A new contact
+     * @param vertex
+     * @return A new contact
      */
     static create(vertex) {
         return {
@@ -2078,7 +2108,7 @@ class Grid {
      */
     static _createActivePairsList(grid) {
         const gridPairs = grid.pairs;
-        const pairKeys = Object.keys(gridPairs);
+        const pairKeys = Common_1.default.keys(gridPairs);
         const pairKeysLength = pairKeys.length;
         const pairs = [];
         // iterate over grid.pairs
@@ -2444,9 +2474,9 @@ class Query {
     /**
      * Returns all bodies whose vertices contain the given point, from the given set of bodies.
      * @method point
-     * @param {body[]} bodies
-     * @param {vector} point
-     * @return {body[]} The bodies matching the query
+     * @param bodies
+     * @param point
+     * @return The bodies matching the query
      */
     static point(bodies, point) {
         const result = [];
@@ -2920,7 +2950,6 @@ class Constraint {
     }
     /**
      * Prepares for solving by constraint warming.
-     * @private
      * @method preSolveAll
      * @param bodies
      */
@@ -2938,10 +2967,9 @@ class Constraint {
     }
     /**
      * Solves all constraints in a list of collisions.
-     * @private
      * @method solveAll
-     * @param {constraint[]} constraints
-     * @param {number} delta
+     * @param constraints
+     * @param delta
      */
     static solveAll(constraints, delta) {
         const timeScale = Common_1.default.clamp(delta / Common_1.default._baseDelta, 0, 1);
@@ -3136,8 +3164,8 @@ class Constraint {
      * This is the distance between both of the constraint's end points.
      * See `constraint.length` for the target rest length.
      * @method currentLength
-     * @param {constraint} constraint
-     * @returns {number} the current length
+     * @param constraint
+     * @returns the current length
      */
     static currentLength(constraint) {
         const pointAX = (constraint.bodyA ? constraint.bodyA.position.x : 0) +
@@ -3358,7 +3386,7 @@ class Common {
         const date = new Date();
         return +date - Common._nowStartTime;
     }
-    static random(min = 1, max = 1) {
+    static random(min = 0, max = 1) {
         return min + Common._seededRandom() * (max - min);
     }
     static _seededRandom() {
@@ -3434,9 +3462,16 @@ class Common {
      * @param obj
      * @return True if the object is an array, otherwise false
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static isArray(obj) {
         return Object.prototype.toString.call(obj) === '[object Array]';
     }
+    /**
+     * Returns true if the object is an Object.
+     * @method isObject
+     * @param value
+     * @return True if the object is an Object, otherwise false
+     */
     static isObject(value) {
         return !!value && value.constructor === Object;
     }
@@ -3452,6 +3487,44 @@ class Common {
             return obj instanceof HTMLElement;
         }
         return !!(obj && obj.nodeType && obj.nodeName);
+    }
+    /**
+     * Returns the list of keys for the given object.
+     * @method keys
+     * @param obj
+     * @return keys
+     */
+    static keys(obj) {
+        if (Object.keys) {
+            return Object.keys(obj);
+        }
+        // avoid hasOwnProperty for performance
+        const keys = [];
+        for (const key in obj) {
+            keys.push(key);
+        }
+        return keys;
+    }
+    /**
+     * Returns the list of values for the given object.
+     * @method values
+     * @param obj
+     * @return Array of the objects property values
+     */
+    static values(obj) {
+        const values = [];
+        if (Object.keys) {
+            const keys = Object.keys(obj);
+            for (let i = 0; i < keys.length; i++) {
+                values.push(obj[keys[i]]);
+            }
+            return values;
+        }
+        // avoid hasOwnProperty for performance
+        for (const key in obj) {
+            values.push(obj[key]);
+        }
+        return values;
     }
     /**
      * Gets a value from `base` relative to the `path` string.
@@ -4052,7 +4125,7 @@ class Events {
         // handle Events.off(object, callback)
         if (typeof eventNames === 'function') {
             callback = eventNames;
-            names = Object.keys(object.events);
+            names = Common_1.default.keys(object.events);
         }
         else {
             names = eventNames.split(' ');
@@ -4072,7 +4145,7 @@ class Events {
     }
     static trigger(object, eventNames, event = {}) {
         const events = object.events;
-        if (events && Object.keys(events).length > 0) {
+        if (events && Common_1.default.keys(events).length > 0) {
             const names = eventNames.split(' ');
             for (const name of names) {
                 const callbacks = events[name];
@@ -4316,11 +4389,10 @@ class Mouse {
     /**
      * Gets the mouse position relative to an element given a screen pixel ratio.
      * @method _getRelativeMousePosition
-     * @private
-     * @param {} event
-     * @param {} element
-     * @param {number} pixelRatio
-     * @return {}
+     * @param event
+     * @param element
+     * @param pixelRatio
+     * @return The mouse position
      */
     static _getRelativeMousePosition(event, element, pixelRatio) {
         const elementBounds = element.getBoundingClientRect();
@@ -4632,7 +4704,7 @@ class Plugin {
      * If a version or range is not specified, then any version (`*`) is assumed to satisfy.
      * @param version The version string.
      * @param range The range string.
-     * @return {boolean} `true` if `version` satisfies `range`, otherwise `false`.
+     * @return `true` if `version` satisfies `range`, otherwise `false`.
      */
     static versionSatisfies(version, range) {
         range = range || '*';
@@ -5124,6 +5196,66 @@ class Bodies {
         return Body_1.default.create(Common_1.default.extend({}, polygon, options));
     }
     /**
+     * Creates a new rectangle body that fits the letters of the given text.
+     * @method text
+     * @param x
+     * @param y
+     * @param text
+     * @param options
+     * @return A new rectangle body with the given text
+     */
+    static text(x, y, text, options = {}) {
+        var _a;
+        const defaultTextRender = {
+            content: text,
+            font: 'Arial',
+            align: 'center',
+            color: '#000000',
+            size: 16,
+            isBold: false,
+            isStroke: false,
+            paddingX: 0,
+            paddingY: 0,
+        };
+        const textRender = Common_1.default.extend(defaultTextRender, (_a = options.render) === null || _a === void 0 ? void 0 : _a.text);
+        textRender.content = text;
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        if (!context) {
+            throw new Error('Failed to create canvas context');
+        }
+        context.font = `${textRender.isBold ? 'bold' : ''} ${textRender.size}px ${textRender.font}`;
+        context.textAlign = textRender.align;
+        const textWidth = Bodies.measureMaxTextWidth(text, textRender.font, textRender.size) +
+            textRender.paddingX * 2;
+        const textHeight = text.split('\n').length * textRender.size + textRender.paddingY * 2;
+        return Bodies.rectangle(x, y, textWidth, textHeight, Object.assign(Object.assign({}, options), { render: Object.assign(Object.assign({}, options.render), { text: textRender }) }));
+    }
+    /**
+     * Measure max text width for a given font.
+     * @method measureMaxTextWidth
+     * @param text
+     * @param font
+     * @param size
+     */
+    static measureMaxTextWidth(text, font, size) {
+        const canvas = document.createElement('canvas');
+        const context = canvas.getContext('2d');
+        if (!context) {
+            throw new Error('Failed to create canvas context');
+        }
+        context.font = `${size}px ${font}`;
+        const lines = text.split('\n');
+        let maxWidth = 0;
+        for (const line of lines) {
+            const width = context.measureText(line).width;
+            if (width > maxWidth) {
+                maxWidth = width;
+            }
+        }
+        return maxWidth;
+    }
+    /**
      * Utility to create a compound body based on set(s) of vertices.
      *
      * _Note:_ To optionally enable automatic concave vertices decomposition the [poly-decomp](https://github.com/schteppe/poly-decomp.js)
@@ -5159,7 +5291,6 @@ class Bodies {
     static fromVertices(x, y, vertexSets, options = {}, flagInternal = false, removeCollinear = 0.01, minimumArea = 10, removeDuplicatePoints = 0.01) {
         const decomp = Common_1.default.getDecomp();
         // check decomp is as expected
-        // @ts-ignore
         const canDecomp = Boolean(decomp && decomp.quickDecomp);
         const parts = [];
         // ensure vertexSets is an array of arrays
@@ -5546,17 +5677,17 @@ class Composites {
      * and the [cloth example](https://github.com/liabru/matter-js/blob/master/examples/cloth.js), follow those instead as this function is deprecated here.
      * @deprecated moved to softBody and cloth examples
      * @method softBody
-     * @param {number} x Starting position in X.
-     * @param {number} y Starting position in Y.
-     * @param {number} columns
-     * @param {number} rows
-     * @param {number} columnGap
-     * @param {number} rowGap
-     * @param {boolean} crossBrace
-     * @param {number} particleRadius
-     * @param {} particleOptions
-     * @param {} constraintOptions
-     * @return {composite} A new composite softBody
+     * @param x Starting position in X.
+     * @param y Starting position in Y.
+     * @param columns
+     * @param rows
+     * @param columnGap
+     * @param rowGap
+     * @param crossBrace
+     * @param particleRadius
+     * @param particleOptions
+     * @param constraintOptions
+     * @return A new composite softBody
      */
     static softBody(x, y, columns, rows, columnGap, rowGap, crossBrace, particleRadius, particleOptions, constraintOptions) {
         particleOptions = Common_1.default.extend({ inertia: Infinity }, particleOptions);
@@ -6069,8 +6200,8 @@ class Vector {
     /**
      * Returns the magnitude (length) of a vector (therefore saving a `sqrt` operation).
      * @method magnitudeSquared
-     * @param {vector} vector
-     * @return {number} The squared magnitude of the vector
+     * @param vector
+     * @return The squared magnitude of the vector
      */
     static magnitudeSquared(vector) {
         return vector.x * vector.x + vector.y * vector.y;
@@ -6078,10 +6209,10 @@ class Vector {
     /**
      * Rotates the vector about (0, 0) by specified angle.
      * @method rotate
-     * @param {vector} vector
-     * @param {number} angle
-     * @param {vector} [output]
-     * @return {vector} The vector rotated about (0, 0)
+     * @param vector
+     * @param angle
+     * @param output
+     * @return The vector rotated about (0, 0)
      */
     static rotate(vector, angle, output = Vector.create()) {
         const cos = Math.cos(angle);
@@ -6686,6 +6817,7 @@ const Common_1 = __importDefault(__webpack_require__(120));
 const Engine_1 = __importDefault(__webpack_require__(332));
 const Events_1 = __importDefault(__webpack_require__(884));
 const Mouse_1 = __importDefault(__webpack_require__(200));
+const Bodies_1 = __importDefault(__webpack_require__(392));
 const Bounds_1 = __importDefault(__webpack_require__(447));
 const Vector_1 = __importDefault(__webpack_require__(795));
 /**
@@ -6957,7 +7089,7 @@ class Render {
     /**
      * Applies viewport transforms based on `render.bounds` to a render context.
      * @method startViewTransform
-     * @param {render} render
+     * @param render
      */
     static startViewTransform(render) {
         const boundsWidth = render.bounds.max.x - render.bounds.min.x;
@@ -7330,9 +7462,7 @@ class Render {
                 else if (part.render.opacity !== 1) {
                     context.globalAlpha = part.render.opacity;
                 }
-                if (part.render.sprite &&
-                    part.render.sprite.texture &&
-                    !options.wireframes) {
+                if (Body_1.default.isSpriteRender(part.render) && !options.wireframes) {
                     // part sprite
                     const sprite = part.render.sprite;
                     const texture = Render._getTexture(render, sprite.texture);
@@ -7379,6 +7509,41 @@ class Render {
                         context.lineWidth = 1;
                         context.strokeStyle = render.options.wireframeStrokeStyle;
                         context.stroke();
+                    }
+                    if (Body_1.default.isTextRender(part.render)) {
+                        // render text
+                        const lines = part.render.text.content.split('\n');
+                        context.textBaseline = lines.length % 2 === 0 ? 'top' : 'middle';
+                        context.font = `${part.render.text.isBold ? 'bold ' : ''}${part.render.text.size}px ${part.render.text.font}`;
+                        context.fillStyle = part.render.text.color;
+                        context.textAlign = part.render.text.align;
+                        context.translate(part.position.x + part.render.text.paddingX, part.position.y + part.render.text.paddingY);
+                        context.rotate(part.angle);
+                        const maxTextWidth = Bodies_1.default.measureMaxTextWidth(part.render.text.content, part.render.text.font, part.render.text.size);
+                        let x;
+                        switch (part.render.text.align) {
+                            case 'left':
+                            case 'start':
+                                x = -maxTextWidth / 2;
+                                break;
+                            case 'end':
+                            case 'right':
+                                x = maxTextWidth / 2;
+                                break;
+                            default:
+                                x = 0;
+                        }
+                        for (let i = 0; i < lines.length; i++) {
+                            if (part.render.text.isStroke) {
+                                context.strokeText(lines[i], x, (i - Math.floor(lines.length / 2)) * part.render.text.size);
+                            }
+                            else {
+                                context.fillText(lines[i], x, (i - Math.floor(lines.length / 2)) * part.render.text.size);
+                            }
+                        }
+                        // revert translation, hopefully faster than save / restore
+                        context.rotate(-part.angle);
+                        context.translate(-part.position.x - part.render.text.paddingX, -part.position.y - part.render.text.paddingY);
                     }
                 }
                 context.globalAlpha = 1;
@@ -7957,7 +8122,7 @@ exports["default"] = Render;
 /***/ 147:
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.0.6","license":"MIT","homepage":"https://github.com/Rozelin-dc/matter-tools","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-tools":"^0.14.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"start":"npm run dev","dev":"npm run serve -- --open","serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-alpha":"webpack --mode=production","build-dev":"webpack --mode=production","build-demo":"rm -rf ./demo/js && webpack --config webpack.demo.config.js --mode=production && webpack --config webpack.demo.config.js --mode=production","lint":"eslint \\"src/**/*.ts\\"","typedoc":"typedoc --out docs src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
+module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.1.0","license":"MIT","homepage":"https://rozelin-dc.github.io/matter-ts","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["javascript","typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-tools":"^0.14.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-demo":"webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production","lint":"eslint \\"src/**/*.ts\\"","typedoc":"typedoc --out docs/typedoc src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
 
 /***/ })
 

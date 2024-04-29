@@ -38,9 +38,9 @@ export default class Query {
     /**
      * Returns all bodies whose vertices contain the given point, from the given set of bodies.
      * @method point
-     * @param {body[]} bodies
-     * @param {vector} point
-     * @return {body[]} The bodies matching the query
+     * @param bodies
+     * @param point
+     * @return The bodies matching the query
      */
     static point(bodies: IBody[], point: IVector): IBody[];
 }
