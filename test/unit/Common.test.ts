@@ -64,3 +64,11 @@ describe('Common.isArray', () => {
   expect(Common.isArray({ a: 1 })).toBe(false)
   expect(Common.isArray([{ a: 1 }])).toBe(true)
 })
+
+describe('Common.isObject', () => {
+  expect(Common.isObject(1)).toBe(false)
+  expect(Common.isObject([1])).toBe(false)
+  expect(Common.isObject({ a: 1 })).toBe(true)
+  expect(Common.isObject({ 1: 1 })).toBe(true)
+  expect(Common.isObject([{ a: 1 }])).toBe(false)
+})

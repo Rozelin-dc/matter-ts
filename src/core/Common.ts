@@ -5,6 +5,9 @@ export type DeepPartial<T> = T extends object
   : T
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ObjectLike<T = any> = Record<string | number, T>
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Decomp = any
 
 interface IWindow extends Window {
@@ -163,7 +166,7 @@ export default class Common {
    * @param value
    * @return True if the object is an Object, otherwise false
    */
-  public static isObject(value: unknown): value is Object {
+  public static isObject(value: unknown): value is ObjectLike {
     return !!value && value.constructor === Object
   }
 
@@ -188,7 +191,7 @@ export default class Common {
    * @param obj
    * @return keys
    */
-  public static keys(obj: Object): string[] {
+  public static keys(obj: Record<string, unknown>): string[] {
     if (Object.keys) {
       return Object.keys(obj)
     }
@@ -207,7 +210,7 @@ export default class Common {
    * @param obj
    * @return Array of the objects property values
    */
-  public static values<T>(obj: Record<string, T>): T[] {
+  public static values<T>(obj: ObjectLike<T>): T[] {
     const values: T[] = []
 
     if (Object.keys) {
@@ -275,22 +278,22 @@ export default class Common {
    * @param deep
    * @return obj extended
    */
-  public static extend<T extends Object, E extends Object>(
+  public static extend<T extends ObjectLike, E extends ObjectLike>(
     obj: T,
     deep?: boolean | E,
     ...params: E[]
   ): T & E
-  public static extend<T extends Object>(
+  public static extend<T extends ObjectLike>(
     obj: DeepPartial<T>,
     deep?: boolean | T,
     ...params: T[]
   ): T
-  public static extend<T extends Object>(
+  public static extend<T extends ObjectLike>(
     obj: T,
     deep?: boolean | DeepPartial<T>,
     ...params: DeepPartial<T>[]
   ): T
-  public static extend<T extends Object, E extends Object = T>(
+  public static extend<T extends ObjectLike, E extends ObjectLike = T>(
     obj: T & Partial<E>,
     deep?: boolean | E,
     ...params: E[]
@@ -344,7 +347,7 @@ export default class Common {
    * @param deep
    * @return obj cloned
    */
-  public static clone<T extends Object>(obj: T, deep?: boolean): T {
+  public static clone<T extends ObjectLike>(obj: T, deep?: boolean): T {
     return Common.extend<{}, T>({}, deep, obj)
   }
 
@@ -371,7 +374,7 @@ export default class Common {
    * @param name The property name of the function on obj
    * @param warning The one-time message to show if the function is called
    */
-  public static deprecated<T extends Record<string, Function>>(
+  public static deprecated<T extends ObjectLike<Function>>(
     obj: T,
     prop: keyof T,
     warning: string
@@ -429,7 +432,7 @@ export default class Common {
    * @return Partially ordered set of vertices in topological order.
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public static topologicalSort<T extends Record<any, any[]>>(
+  public static topologicalSort<T extends ObjectLike<any[]>>(
     graph: T
   ): (keyof T)[] {
     // https://github.com/mgechev/javascript-algorithms
@@ -449,7 +452,7 @@ export default class Common {
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  protected static _topologicalSort<T extends Record<any, any[]>>(
+  protected static _topologicalSort<T extends ObjectLike<any[]>>(
     node: keyof T,
     visited: Record<keyof T, boolean>,
     temp: Record<keyof T, boolean>,
@@ -509,8 +512,7 @@ export default class Common {
       }
 
       for (let i = 0; i < funcs.length; i += 1) {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const result: any = funcs[i].apply(lastResult, args)
+        const result = funcs[i].apply(lastResult, args)
 
         if (typeof result !== 'undefined') {
           lastResult = result
