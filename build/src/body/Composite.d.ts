@@ -77,7 +77,7 @@ export interface IComposite {
     events: Record<CompositeEventName, Function[]>;
     gravity?: IEngineGravity;
 }
-type CompositeAddableObject = IBody | IComposite | IConstraint | IMouseConstraint;
+export type CompositeAddableObject = IBody | IComposite | IConstraint | IMouseConstraint;
 /**
  * A composite is a collection of `Matter.Body`, `Matter.Constraint` and other `Matter.Composite` objects.
  *
@@ -295,4 +295,3 @@ export default class Composite {
      */
     static bounds(composite: IComposite): IBounds;
 }
-export {};

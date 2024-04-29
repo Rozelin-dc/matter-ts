@@ -6,7 +6,7 @@ export interface IPlugin {
     install: Function;
     _warned?: boolean;
 }
-interface ParsedVersion {
+export interface ParsedVersion {
     isRange: boolean;
     version: string;
     range: string;
@@ -143,7 +143,7 @@ export default class Plugin {
      * If a version or range is not specified, then any version (`*`) is assumed to satisfy.
      * @param version The version string.
      * @param range The range string.
-     * @return {boolean} `true` if `version` satisfies `range`, otherwise `false`.
+     * @return `true` if `version` satisfies `range`, otherwise `false`.
      */
     static versionSatisfies(version: string, range: string): boolean;
 }

@@ -1,5 +1,4 @@
 /// <reference types="node" />
-import { DeepPartial } from './Common';
 import { IEngine } from './Engine';
 import { RunnerEventFunction, RunnerEventName } from './Events';
 export interface IRunner {
@@ -54,7 +53,7 @@ export default class Runner {
      * @method create
      * @param options
      */
-    static create(options?: DeepPartial<IRunner>): IRunner;
+    static create(options?: Partial<IRunner>): IRunner;
     /**
      * Continuously ticks a `Matter.Engine` by calling `Runner.tick` on the `requestAnimationFrame` event.
      * @method run

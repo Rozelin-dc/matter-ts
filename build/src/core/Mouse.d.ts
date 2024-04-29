@@ -1,5 +1,5 @@
 import { IVector } from '../geometry/Vector';
-type MouseEventType = MouseEvent | TouchEvent;
+export type MouseEventType = MouseEvent | TouchEvent;
 export interface IMouse {
     element: HTMLElement;
     absolute: IVector;
@@ -64,12 +64,10 @@ export default class Mouse {
     /**
      * Gets the mouse position relative to an element given a screen pixel ratio.
      * @method _getRelativeMousePosition
-     * @private
-     * @param {} event
-     * @param {} element
-     * @param {number} pixelRatio
-     * @return {}
+     * @param event
+     * @param element
+     * @param pixelRatio
+     * @return The mouse position
      */
     protected static _getRelativeMousePosition(event: MouseEventType, element: HTMLElement, pixelRatio: number): IVector;
 }
-export {};

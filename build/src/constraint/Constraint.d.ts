@@ -75,7 +75,7 @@ export interface IConstraint {
     angleA: number;
     angleB: number;
 }
-interface IConstraintRender {
+export interface IConstraintRender {
     /**
      * A flag that indicates if the constraint should be rendered.
      *
@@ -139,17 +139,15 @@ export default class Constraint {
     static create(options: ConstraintOptions): IConstraint;
     /**
      * Prepares for solving by constraint warming.
-     * @private
      * @method preSolveAll
      * @param bodies
      */
     static preSolveAll(bodies: IBody[]): void;
     /**
      * Solves all constraints in a list of collisions.
-     * @private
      * @method solveAll
-     * @param {constraint[]} constraints
-     * @param {number} delta
+     * @param constraints
+     * @param delta
      */
     static solveAll(constraints: IConstraint[], delta: number): void;
     /**
@@ -158,7 +156,7 @@ export default class Constraint {
      * @param constraint
      * @param timeScale
      */
-    protected static solve(constraint: IConstraint, timeScale: number): void;
+    static solve(constraint: IConstraint, timeScale: number): void;
     /**
      * Performs body updates required after solving constraints.
      * @method postSolveAll
@@ -184,9 +182,8 @@ export default class Constraint {
      * This is the distance between both of the constraint's end points.
      * See `constraint.length` for the target rest length.
      * @method currentLength
-     * @param {constraint} constraint
-     * @returns {number} the current length
+     * @param constraint
+     * @returns the current length
      */
     static currentLength(constraint: IConstraint): number;
 }
-export {};
