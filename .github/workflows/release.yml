@@ -28,7 +28,7 @@ jobs:
           git config user.name  "actions-user"
           git config user.email "action@github.com"
           git pull
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
@@ -60,7 +60,7 @@ jobs:
           git config user.name  "actions-user"
           git config user.email "action@github.com"
           git pull
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20
           registry-url: 'https://registry.npmjs.org'
@@ -71,9 +71,9 @@ jobs:
       - run: npm run build
       - run: npm run typedoc
       - run: npm run build-demo
-      - uses: actions/upload-pages-artifact@v2
+      - uses: actions/upload-pages-artifact@v3
         with:
           path: ./docs
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v3
