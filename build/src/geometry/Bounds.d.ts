@@ -14,7 +14,7 @@ export default class Bounds {
      * @param vertices
      * @return A new bounds object
      */
-    static create(vertices: IVertices): IBounds;
+    static create(vertices?: IVertices): IBounds;
     /**
      * Updates bounds using the given vertices and extends the bounds given a velocity.
      * @method update

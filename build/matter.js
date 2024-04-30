@@ -1,5 +1,5 @@
 /*!
- * @rozelin/matter-ts 1.1.1 by @Rozelin
+ * @rozelin/matter-ts 1.1.2 by @Rozelin
  * https://rozelin-dc.github.io/matter-ts
  * License MIT
  *
@@ -6732,10 +6732,34 @@ exports["default"] = Vertices;
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Render = exports.Vertices = exports.Vector = exports.Svg = exports.Bounds = exports.Axes = exports.Composites = exports.Bodies = exports.Sleeping = exports.Runner = exports.Plugin = exports.Mouse = exports.Matter = exports.Events = exports.Engine = exports.Common = exports.MouseConstraint = exports.Constraint = exports.SAT = exports.Resolver = exports.Query = exports.Pairs = exports.Pair = exports.Grid = exports.Detector = exports.Contact = exports.Collision = exports.World = exports.Composite = exports.Body = void 0;
 const Body_1 = __importDefault(__webpack_require__(713));
 const Composite_1 = __importDefault(__webpack_require__(927));
 const World_1 = __importDefault(__webpack_require__(178));
@@ -6766,6 +6790,36 @@ const Svg_1 = __importDefault(__webpack_require__(550));
 const Vector_1 = __importDefault(__webpack_require__(795));
 const Vertices_1 = __importDefault(__webpack_require__(547));
 const Render_1 = __importDefault(__webpack_require__(879));
+exports.Body = __importStar(__webpack_require__(713));
+exports.Composite = __importStar(__webpack_require__(927));
+exports.World = __importStar(__webpack_require__(178));
+exports.Collision = __importStar(__webpack_require__(697));
+exports.Contact = __importStar(__webpack_require__(461));
+exports.Detector = __importStar(__webpack_require__(493));
+exports.Grid = __importStar(__webpack_require__(281));
+exports.Pair = __importStar(__webpack_require__(168));
+exports.Pairs = __importStar(__webpack_require__(577));
+exports.Query = __importStar(__webpack_require__(280));
+exports.Resolver = __importStar(__webpack_require__(561));
+exports.SAT = __importStar(__webpack_require__(408));
+exports.Constraint = __importStar(__webpack_require__(61));
+exports.MouseConstraint = __importStar(__webpack_require__(410));
+exports.Common = __importStar(__webpack_require__(120));
+exports.Engine = __importStar(__webpack_require__(332));
+exports.Events = __importStar(__webpack_require__(884));
+exports.Matter = __importStar(__webpack_require__(49));
+exports.Mouse = __importStar(__webpack_require__(200));
+exports.Plugin = __importStar(__webpack_require__(885));
+exports.Runner = __importStar(__webpack_require__(585));
+exports.Sleeping = __importStar(__webpack_require__(464));
+exports.Bodies = __importStar(__webpack_require__(392));
+exports.Composites = __importStar(__webpack_require__(297));
+exports.Axes = __importStar(__webpack_require__(631));
+exports.Bounds = __importStar(__webpack_require__(447));
+exports.Svg = __importStar(__webpack_require__(550));
+exports.Vector = __importStar(__webpack_require__(795));
+exports.Vertices = __importStar(__webpack_require__(547));
+exports.Render = __importStar(__webpack_require__(879));
 class MatterModule extends Matter_1.default {
 }
 MatterModule.Axes = Axes_1.default;
@@ -8121,7 +8175,7 @@ exports["default"] = Render;
 /***/ 147:
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.1.1","license":"MIT","homepage":"https://rozelin-dc.github.io/matter-ts","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["javascript","typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-tools":"^0.14.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-demo":"webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production","lint":"eslint \\"src/**/*.ts\\"","typedoc":"typedoc --out docs/typedoc src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
+module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.1.2","license":"MIT","homepage":"https://rozelin-dc.github.io/matter-ts","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["javascript","typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-tools":"^0.14.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-demo":"webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production","lint":"eslint \\"src/**/*.ts\\"","typedoc":"typedoc --out docs/typedoc src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
 
 /***/ })
 

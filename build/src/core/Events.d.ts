@@ -82,6 +82,9 @@ export default class Events {
     static on(mouse: IMouseConstraint, eventName: MouseEventName, callback: MouseEventFunction): MouseEventFunction;
     static on(runner: IRunner, eventName: RunnerEventName, callback: RunnerEventFunction): RunnerEventFunction;
     static on(runner: IRender, eventName: RenderEventName, callback: RenderEventFunction): RenderEventFunction;
+    static on<F extends Function, T extends {
+        events: Record<string, F[]>;
+    }>(object: T, eventNames: string, callback: F): F;
     /**
      * Removes the given event callback. If no callback, clears all callbacks in `eventNames`. If no `eventNames`, clears all events.
      * @method off
@@ -95,6 +98,9 @@ export default class Events {
     static off(mouse: IMouseConstraint, eventName: MouseEventName | MouseEventFunction, callback?: MouseEventFunction): void;
     static off(runner: IRunner, eventName: RunnerEventName | RunnerEventFunction, callback?: RunnerEventFunction): void;
     static off(runner: IRender, eventName: RenderEventName | RenderEventFunction, callback?: RenderEventFunction): void;
+    static off<T extends {
+        events: Record<string, F[]>;
+    }, F extends EventFunction<T>>(object: T, eventNames?: string | F, callback?: F): void;
     /**
      * Fires all the callbacks subscribed to the given object's `eventName`, in the order they subscribed, if any.
      * @method trigger
@@ -108,5 +114,8 @@ export default class Events {
     static trigger(engine: IEngine, eventName: EngineEventName, event: Partial<IEngineEvent>): void;
     static trigger(runner: IRunner, eventName: RunnerEventName, event: Partial<IRunnerEvent>): void;
     static trigger(runner: IRender, eventName: RenderEventName, event: Partial<IRenderEvent>): void;
+    static trigger<T extends {
+        events: Record<string, Function[]>;
+    }, E extends IEvent<string, T>>(object: T, eventNames: string, event: Partial<E>): void;
 }
 export {};
