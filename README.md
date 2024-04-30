@@ -8,3 +8,20 @@ You can also see [TypeDoc](https://rozelin-dc.github.io/matter-ts)
 ```bash
 npm install @rozelin/matter-ts
 ```
+
+## Type Declaration Usage
+If you want to import and use interface definitions, etc., you can write as follows.
+```ts
+import Matter, { Body } from '@rozelin/matter-ts'
+
+const body: Body.IBody = Matter.Body.create()
+```
+
+or
+
+```ts
+import * as MatterTypes from '@rozelin/matter-ts'
+const Matter = MatterTypes.default
+
+const body: MatterTypes.Body.IBody = Matter.Body.create()
+```
