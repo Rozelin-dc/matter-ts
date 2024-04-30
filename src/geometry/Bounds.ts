@@ -16,7 +16,7 @@ export default class Bounds {
    * @param vertices
    * @return A new bounds object
    */
-  public static create(vertices: IVertices): IBounds {
+  public static create(vertices?: IVertices): IBounds {
     const bounds: IBounds = {
       min: Vector.create(0, 0),
       max: Vector.create(0, 0),

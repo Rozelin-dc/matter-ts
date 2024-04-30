@@ -148,6 +148,10 @@ export default class Events {
   public static on<
     F extends Function,
     T extends { events: Record<string, F[]> }
+  >(object: T, eventNames: string, callback: F): F
+  public static on<
+    F extends Function,
+    T extends { events: Record<string, F[]> }
   >(object: T, eventNames: string, callback: F): F {
     const names = eventNames.split(' ')
 
@@ -197,6 +201,10 @@ export default class Events {
     eventName: RenderEventName | RenderEventFunction,
     callback?: RenderEventFunction
   ): void
+  public static off<
+    T extends { events: Record<string, F[]> },
+    F extends EventFunction<T>
+  >(object: T, eventNames?: string | F, callback?: F): void
   public static off<
     T extends { events: Record<string, F[]> },
     F extends EventFunction<T>
@@ -270,8 +278,12 @@ export default class Events {
   ): void
   public static trigger<
     T extends { events: Record<string, Function[]> },
-    E extends Partial<IEvent<string, T>>
-  >(object: T, eventNames: string, event: E = {} as E): void {
+    E extends IEvent<string, T>
+  >(object: T, eventNames: string, event: Partial<E>): void
+  public static trigger<
+    T extends { events: Record<string, Function[]> },
+    E extends IEvent<string, T>
+  >(object: T, eventNames: string, event: Partial<E> = {}): void {
     const events = object.events
     if (events && Common.keys(events).length > 0) {
       const names = eventNames.split(' ')
