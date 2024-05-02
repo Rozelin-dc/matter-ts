@@ -1,5 +1,5 @@
 /*!
- * @rozelin/matter-ts 1.1.2 by @Rozelin
+ * @rozelin/matter-ts 1.1.3 by @Rozelin
  * https://rozelin-dc.github.io/matter-ts
  * License MIT
  *
@@ -1710,7 +1710,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const Common_1 = __importDefault(__webpack_require__(120));
+const Bounds_1 = __importDefault(__webpack_require__(447));
 const Collision_1 = __importDefault(__webpack_require__(697));
+const SAT_1 = __importDefault(__webpack_require__(408));
 /**
  * The `Matter.Detector` module contains methods for efficiently detecting collisions between a list of bodies using a broadphase algorithm.
  */
@@ -1830,6 +1832,56 @@ class Detector {
         }
         return ((filterA.mask & filterB.category) !== 0 &&
             (filterB.mask & filterA.category) !== 0);
+    }
+    /**
+     * @method bruteForce
+     * @param bodies
+     * @param engine
+     * @return collisions
+     */
+    static bruteForce(bodies, engine) {
+        const collisions = [];
+        // @if DEBUG
+        const metrics = engine.metrics;
+        // @endif
+        for (let i = 0; i < bodies.length; i++) {
+            for (let j = i + 1; j < bodies.length; j++) {
+                const bodyA = bodies[i];
+                const bodyB = bodies[j];
+                // NOTE: could share a function for the below, but may drop performance?
+                if ((bodyA.isStatic || bodyA.isSleeping) &&
+                    (bodyB.isStatic || bodyB.isSleeping)) {
+                    continue;
+                }
+                if (!Detector.canCollide(bodyA.collisionFilter, bodyB.collisionFilter)) {
+                    continue;
+                }
+                // @if DEBUG
+                metrics.midphaseTests += 1;
+                // @endif
+                // mid phase
+                if (Bounds_1.default.overlaps(bodyA.bounds, bodyB.bounds)) {
+                    // narrow phase
+                    const collision = SAT_1.default.collides(bodyA, bodyB);
+                    if (!collision) {
+                        continue;
+                    }
+                    // @if DEBUG
+                    metrics.narrowphaseTests += 1;
+                    if ('reused' in collision) {
+                        metrics.narrowReuseCount += 1;
+                    }
+                    // @endif
+                    if (collision.collided) {
+                        collisions.push(collision);
+                        // @if DEBUG
+                        metrics.narrowDetections += 1;
+                        // @endif
+                    }
+                }
+            }
+        }
+        return collisions;
     }
     /**
      * The comparison function used in the broadphase algorithm.
@@ -8175,7 +8227,7 @@ exports["default"] = Render;
 /***/ 147:
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.1.2","license":"MIT","homepage":"https://rozelin-dc.github.io/matter-ts","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["javascript","typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-tools":"^0.14.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-demo":"webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production","lint":"eslint \\"src/**/*.ts\\"","typedoc":"typedoc --out docs/typedoc src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
+module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.1.3","license":"MIT","homepage":"https://rozelin-dc.github.io/matter-ts","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["javascript","typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-tools":"^0.14.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-demo":"webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production","lint":"eslint \\"src/**/*.ts\\"","typedoc":"typedoc --out docs/typedoc src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
 
 /***/ })
 

@@ -1,5 +1,6 @@
 import { IBody } from '../body/Body';
 import { DeepPartial } from '../core/Common';
+import { IEngine } from '../core/Engine';
 import { ICollision } from './Collision';
 import { IPairs } from './Pairs';
 export interface IDetector {
@@ -54,6 +55,13 @@ export default class Detector {
      * @return `true` if collision can occur
      */
     static canCollide(filterA: ICollisionFilter, filterB: ICollisionFilter): boolean;
+    /**
+     * @method bruteForce
+     * @param bodies
+     * @param engine
+     * @return collisions
+     */
+    static bruteForce(bodies: IBody[], engine: IEngine): ICollision[];
     /**
      * The comparison function used in the broadphase algorithm.
      * Returns the signed delta of the bodies bounds on the x-axis.

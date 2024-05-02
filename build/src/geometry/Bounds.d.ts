@@ -22,7 +22,7 @@ export default class Bounds {
      * @param vertices
      * @param velocity
      */
-    static update(bounds: IBounds, vertices: IVertices, velocity?: IVector): void;
+    static update(bounds: IBounds, vertices: IVector[], velocity?: IVector): void;
     /**
      * Returns true if the bounds contains the given point.
      * @method contains
