@@ -1,6 +1,11 @@
 export type DeepPartial<T> = T extends object ? {
     [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
+/**
+ * Of the properties of the type specified in the first argument,
+ * only those with the key specified in the second argument are made `Partial`.
+ */
+export type CustomPartial<T extends object, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 export type ObjectLike<T = any> = Record<string | number, T>;
 type Decomp = any;
 declare enum LogLevel {

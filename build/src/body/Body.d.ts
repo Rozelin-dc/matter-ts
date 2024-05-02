@@ -6,7 +6,7 @@ import { IPlugin } from '../core/Plugin';
 import { IVertices } from '../geometry/Vertices';
 import { ICollisionFilter } from '../collision/Detector';
 import { IRegion } from '../collision/Grid';
-import { DeepPartial } from '../core/Common';
+import { CustomPartial, DeepPartial } from '../core/Common';
 export interface IBody {
     /**
      * A `Number` specifying the angle of the body, in radians.
@@ -418,9 +418,9 @@ interface IBodyOriginal {
     inverseMass: number;
     inverseInertia: number;
 }
-type InitBody = Omit<IBody, 'bounds' | 'axes' | 'inverseInertia' | 'inverseMass' | 'positionPrev' | 'parent' | 'chamfer' | 'render'> & {
+type InitBody = Omit<CustomPartial<IBody, 'bounds' | 'axes' | 'inverseInertia' | 'inverseMass' | 'positionPrev' | 'parent' | 'chamfer'>, 'render'> & {
     render: Partial<IBodyRender>;
-} & Partial<Pick<IBody, 'bounds' | 'axes' | 'inverseInertia' | 'inverseMass' | 'positionPrev' | 'parent' | 'chamfer'>>;
+};
 /**
  * The `Matter.Body` module contains methods for creating and manipulating rigid bodies.
  * For creating bodies with common configurations such as rectangles, circles and other polygons see the module `Matter.Bodies`.
