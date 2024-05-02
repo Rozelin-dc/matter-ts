@@ -2,9 +2,7 @@ import Common from '../core/Common'
 import { IBody } from '../body/Body'
 import Vector, { IVector } from './Vector'
 
-export interface IVertex {
-  x: number
-  y: number
+export interface IVertex extends IVector {
   index: number
   body?: IBody
   isInternal: boolean

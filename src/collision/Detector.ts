@@ -1,7 +1,10 @@
 import { IBody } from '../body/Body'
 import Common, { DeepPartial } from '../core/Common'
+import { IEngine } from '../core/Engine'
+import Bounds from '../geometry/Bounds'
 import Collision, { ICollision } from './Collision'
 import { IPairs } from './Pairs'
+import SAT from './SAT'
 
 export interface IDetector {
   bodies: IBody[]
@@ -159,6 +162,72 @@ export default class Detector {
       (filterA.mask & filterB.category) !== 0 &&
       (filterB.mask & filterA.category) !== 0
     )
+  }
+
+  /**
+   * @method bruteForce
+   * @param bodies
+   * @param engine
+   * @return collisions
+   */
+  public static bruteForce(bodies: IBody[], engine: IEngine) {
+    const collisions: ICollision[] = []
+
+    // @if DEBUG
+    const metrics = engine.metrics
+    // @endif
+
+    for (let i = 0; i < bodies.length; i++) {
+      for (let j = i + 1; j < bodies.length; j++) {
+        const bodyA = bodies[i]
+        const bodyB = bodies[j]
+
+        // NOTE: could share a function for the below, but may drop performance?
+
+        if (
+          (bodyA.isStatic || bodyA.isSleeping) &&
+          (bodyB.isStatic || bodyB.isSleeping)
+        ) {
+          continue
+        }
+
+        if (
+          !Detector.canCollide(bodyA.collisionFilter, bodyB.collisionFilter)
+        ) {
+          continue
+        }
+
+        // @if DEBUG
+        metrics.midphaseTests += 1
+        // @endif
+
+        // mid phase
+        if (Bounds.overlaps(bodyA.bounds, bodyB.bounds)) {
+          // narrow phase
+          const collision = SAT.collides(bodyA, bodyB)
+
+          if (!collision) {
+            continue
+          }
+
+          // @if DEBUG
+          metrics.narrowphaseTests += 1
+          if ('reused' in collision) {
+            metrics.narrowReuseCount += 1
+          }
+          // @endif
+
+          if (collision.collided) {
+            collisions.push(collision)
+            // @if DEBUG
+            metrics.narrowDetections += 1
+            // @endif
+          }
+        }
+      }
+    }
+
+    return collisions
   }
 
   /**

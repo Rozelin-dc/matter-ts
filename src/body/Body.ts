@@ -6,7 +6,7 @@ import { IPlugin } from '../core/Plugin'
 import Vertices, { IVertices } from '../geometry/Vertices'
 import { ICollisionFilter } from '../collision/Detector'
 import { IRegion } from '../collision/Grid'
-import Common, { DeepPartial } from '../core/Common'
+import Common, { CustomPartial, DeepPartial } from '../core/Common'
 import Sleeping from '../core/Sleeping'
 
 export interface IBody {
@@ -487,27 +487,18 @@ interface IBodyOriginal {
 }
 
 type InitBody = Omit<
-  IBody,
-  | 'bounds'
-  | 'axes'
-  | 'inverseInertia'
-  | 'inverseMass'
-  | 'positionPrev'
-  | 'parent'
-  | 'chamfer'
-  | 'render'
-> & { render: Partial<IBodyRender> } & Partial<
-    Pick<
-      IBody,
-      | 'bounds'
-      | 'axes'
-      | 'inverseInertia'
-      | 'inverseMass'
-      | 'positionPrev'
-      | 'parent'
-      | 'chamfer'
-    >
-  >
+  CustomPartial<
+    IBody,
+    | 'bounds'
+    | 'axes'
+    | 'inverseInertia'
+    | 'inverseMass'
+    | 'positionPrev'
+    | 'parent'
+    | 'chamfer'
+  >,
+  'render'
+> & { render: Partial<IBodyRender> }
 
 /**
  * The `Matter.Body` module contains methods for creating and manipulating rigid bodies.

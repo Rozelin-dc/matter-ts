@@ -4,6 +4,13 @@ export type DeepPartial<T> = T extends object
     }
   : T
 
+/**
+ * Of the properties of the type specified in the first argument,
+ * only those with the key specified in the second argument are made `Partial`.
+ */
+export type CustomPartial<T extends object, K extends keyof T> = Omit<T, K> &
+  Partial<Pick<T, K>>
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ObjectLike<T = any> = Record<string | number, T>
 
