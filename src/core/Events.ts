@@ -94,7 +94,7 @@ interface IRenderEvent extends IEvent<RenderEventName, IRunner> {
   timestamp?: number
 }
 
-type EventFunction<T> = (event: T) => void
+export type EventFunction<T> = (event: T) => void
 export type BodyEventFunction = EventFunction<IBodyEvent>
 export type CompositeEventFunction = EventFunction<ICompositeEvent>
 export type MouseEventFunction = EventFunction<IMouseEvent>
@@ -279,7 +279,7 @@ export default class Events {
   public static trigger<
     T extends { events: Record<string, Function[]> },
     E extends IEvent<string, T>
-  >(object: T, eventNames: string, event: Partial<E>): void
+  >(object: T, eventNames: string, event?: Partial<E>): void
   public static trigger<
     T extends { events: Record<string, Function[]> },
     E extends IEvent<string, T>

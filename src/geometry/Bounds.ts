@@ -38,7 +38,7 @@ export default class Bounds {
    */
   public static update(
     bounds: IBounds,
-    vertices: IVertices,
+    vertices: IVector[],
     velocity?: IVector
   ): void {
     bounds.min.x = Infinity
