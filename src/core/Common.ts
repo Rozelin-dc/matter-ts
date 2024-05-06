@@ -508,16 +508,10 @@ export default class Common {
       }
     }
 
-    const chain = function () {
+    const chain = function (...args: unknown[]) {
       // https://github.com/GoogleChrome/devtools-docs/issues/53#issuecomment-51941358
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let lastResult: any
-      const args = new Array(params.length)
-
-      for (let i = 0; i < params.length; i++) {
-        args[i] = params[i]
-      }
-
       for (let i = 0; i < funcs.length; i += 1) {
         const result = funcs[i].apply(lastResult, args)
 
