@@ -10,13 +10,21 @@
  * @module Compare
  */
 
-var MatterTools = require('matter-tools')
-var MatterDev = require('matter-js')
-var MatterBuild = require('matter-build')
+import * as MatterToolsTypes from '@rozelin/matter-tools'
+import * as _MatterBuildTypes from 'matter-build'
+import * as MatterDevTypes from '../../../src/matter'
 
-var compare = function (examples, isDev) {
+const MatterTools = MatterToolsTypes.default
+const MatterDev = MatterDevTypes.default
+const MatterBuildTypes: typeof MatterDevTypes = _MatterBuildTypes
+const MatterBuild = MatterBuildTypes.default
+
+export const compare = function (
+  examples: MatterToolsTypes.Demo.IDemoExample[],
+  isDev: boolean
+) {
   // create primary demo for dev build
-  var demo = MatterTools.Demo.create({
+  const demo = MatterTools.Demo.create({
     toolbar: {
       title:
         'matter-ts ・ ' +
@@ -39,15 +47,15 @@ var compare = function (examples, isDev) {
     inline: false,
     preventZoom: true,
     resetOnOrientation: true,
-    routing: true,
     startExample: false,
     examples: examples,
   })
 
   // create secondary demo for release build
-  var demoBuild = MatterTools.Demo.create({
+  const demoBuild = MatterTools.Demo.create({
     toolbar: {
       title: 'matter-ts-compare-build',
+      url: null,
       reset: false,
       source: false,
       inspector: false,
@@ -63,10 +71,9 @@ var compare = function (examples, isDev) {
     inline: false,
     preventZoom: true,
     resetOnOrientation: true,
-    routing: false,
     startExample: false,
     examples: examples.map(function (example) {
-      return Matter.Common.extend({}, example)
+      return MatterBuild.Common.extend({}, example)
     }),
   })
 
@@ -76,33 +83,43 @@ var compare = function (examples, isDev) {
    */
 
   // build version should not run itself
+  // @ts-ignore
   MatterBuild.Runner.run = function () {}
   MatterBuild.Render.run = function () {}
 
   // maintain original references to patched methods
+  // @ts-ignore
   MatterDev.Runner._tick = MatterDev.Runner.tick
+  // @ts-ignore
   MatterDev.Render._world = MatterDev.Render.world
+  // @ts-ignore
   MatterBuild.Mouse._setElement = MatterBuild.Mouse.setElement
 
   // patch MatterTools to control both demo versions simultaneously
+  // @ts-ignore
   MatterTools.Demo._setExample = MatterTools.Demo.setExample
   MatterTools.Demo.setExample = function (_demo, example) {
+    // @ts-ignore
     MatterBuild.Common._nextId = MatterBuild.Common._seed = 0
+    // @ts-ignore
     MatterDev.Common._nextId = MatterDev.Common._seed = 0
 
+    // @ts-ignore
     MatterBuild.Plugin._registry = MatterDev.Plugin._registry
+    // @ts-ignore
     MatterBuild.use.apply(null, MatterDev.used)
 
     window.Matter = MatterDev
+    // @ts-ignore
     MatterTools.Demo._setExample(
       demo,
       demo.examples.find(function (e) {
-        return e.name === example.name
+        return e.name === example?.name
       })
     )
 
-    var maxTicks = parseFloat(window.location.search.split('=')[1])
-    var ticks = 0
+    const maxTicks = parseFloat(window.location.search.split('=')[1])
+    let ticks = 0
 
     MatterDev.Runner.tick = function (runner, engine, time) {
       if (ticks === -1) {
@@ -124,7 +141,7 @@ var compare = function (examples, isDev) {
 
       ticks += 1
 
-      var demoBuildInstance = demoBuild.example.instance
+      const demoBuildInstance = demoBuild.example!.instance!
       runner.isFixed = demoBuildInstance.runner.isFixed = true
       runner.delta = demoBuildInstance.runner.delta = 1000 / 60
 
@@ -135,28 +152,32 @@ var compare = function (examples, isDev) {
         time
       )
       window.Matter = MatterDev
+      // @ts-ignore
       return MatterDev.Runner._tick(runner, engine, time)
     }
 
     MatterDev.Render.world = function (render) {
       window.Matter = MatterBuild
-      MatterBuild.Render.world(demoBuild.example.instance.render)
+      MatterBuild.Render.world(demoBuild.example!.instance!.render)
       window.Matter = MatterDev
+      // @ts-ignore
       return MatterDev.Render._world(render)
     }
 
     MatterBuild.Mouse.setElement = function (mouse) {
+      // @ts-ignore
       return MatterBuild.Mouse._setElement(
         mouse,
-        demo.example.instance.render.canvas
+        demo.example!.instance!.render.canvas
       )
     }
 
     window.Matter = MatterBuild
+    // @ts-ignore
     MatterTools.Demo._setExample(
       demoBuild,
       demoBuild.examples.find(function (e) {
-        return e.name === example.name
+        return e.name === example?.name
       })
     )
 
@@ -164,20 +185,29 @@ var compare = function (examples, isDev) {
   }
 
   // reset both engine versions simultaneously
+  // @ts-ignore
   MatterTools.Demo._reset = MatterTools.Demo.reset
   MatterTools.Demo.reset = function (_demo) {
+    // @ts-ignore
     MatterBuild.Common._nextId = MatterBuild.Common._seed = 0
+    // @ts-ignore
     MatterDev.Common._nextId = MatterDev.Common._seed = 0
 
     window.Matter = MatterBuild
+    // @ts-ignore
     MatterTools.Demo._reset(demoBuild)
 
     window.Matter = MatterDev
+    // @ts-ignore
     MatterTools.Demo._reset(demo)
   }
 
-  document.body.appendChild(demo.dom.root)
-  document.body.appendChild(demoBuild.dom.root)
+  if (demo.dom.root) {
+    document.body.appendChild(demo.dom.root)
+  }
+  if (demoBuild.dom.root) {
+    document.body.appendChild(demoBuild.dom.root)
+  }
 
   MatterTools.Demo.start(demo)
 
@@ -190,5 +220,3 @@ var compare = function (examples, isDev) {
       MatterBuild.version
   )
 }
-
-module.exports = { compare: compare }

@@ -1,3 +1,15 @@
-declare module 'matter-tools'
+import pathseg from 'pathseg'
+import * as MatterToolsTypes from '@rozelin/matter-tools'
 
-declare let __MATTER_IS_DEV__: boolean
+import Matter from '../../../src/matter'
+
+declare global {
+  interface Window {
+    pathseg: typeof pathseg
+    MatterTools: typeof MatterToolsTypes.default
+    Matter: typeof Matter
+    MatterDemoInstance: MatterToolsTypes.Demo.IDemo
+  }
+
+  let __MATTER_IS_DEV__: boolean
+}

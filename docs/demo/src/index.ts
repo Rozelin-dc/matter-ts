@@ -8,21 +8,14 @@
  *
  * @module Index
  */
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const pathseg = require('pathseg')
-import MatterTools  from 'matter-tools'
+import pathseg from 'pathseg'
+import * as MatterToolsTypes from '@rozelin/matter-tools'
+const MatterTools = MatterToolsTypes.default
 
 import Matter from '../../../src/matter'
 import Examples from '../../../examples'
 import { compare } from './Compare'
 import { demo } from './Demo'
-
-interface IWindow extends Window {
-  pathseg: typeof pathseg
-  MatterTools: typeof MatterTools
-  Matter: typeof Matter
-}
-declare const window: IWindow
 
 // browser globals
 window.pathseg = pathseg
@@ -30,7 +23,9 @@ window.MatterTools = MatterTools
 window.Matter = Matter
 
 // prepare examples
-const examples = Matter.Common.keys(Examples).map((id) => {
+const examples: MatterToolsTypes.Demo.IDemoExample[] = Matter.Common.keys(
+  Examples
+).map((id) => {
   return {
     id: id,
     sourceLink:
@@ -39,6 +34,7 @@ const examples = Matter.Common.keys(Examples).map((id) => {
       '.js',
     name: Examples[id as keyof typeof Examples].title,
     init: Examples[id as keyof typeof Examples],
+    instance: null,
   }
 })
 
