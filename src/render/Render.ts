@@ -1270,10 +1270,7 @@ export default class Render {
             context.fillStyle = part.render.text.color
             context.textAlign = part.render.text.align
 
-            context.translate(
-              part.position.x + part.render.text.paddingX,
-              part.position.y + part.render.text.paddingY
-            )
+            context.translate(part.position.x, part.position.y)
             context.rotate(part.angle)
 
             const maxTextWidth = Bodies.measureMaxTextWidth(
@@ -1312,10 +1309,7 @@ export default class Render {
 
             // revert translation, hopefully faster than save / restore
             context.rotate(-part.angle)
-            context.translate(
-              -part.position.x - part.render.text.paddingX,
-              -part.position.y - part.render.text.paddingY
-            )
+            context.translate(-part.position.x, -part.position.y)
           }
         }
 
