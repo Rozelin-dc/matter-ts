@@ -54,7 +54,7 @@
     "watch": "nodemon --watch webpack.demo.config.js --exec \"npm run serve\"",
     "build": "webpack --mode=production",
     "build-demo": "webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production",
-    "lint": "eslint \"src/**/*.ts\"",
+    "lint": "eslint . --ext .ts",
     "typedoc": "typedoc --out docs/typedoc src/**/*.ts",
     "type-check": "tsc --noEmit",
     "test": "jest"

@@ -1,19 +1,21 @@
 {
   "rules": {
-    "no-fallthrough": 2,
-    "no-console": 0,
-    "no-unused-vars": 0,
-    "no-redeclare": 0,
+    "no-fallthrough": "error",
+    "no-console": "off",
+    "no-unused-vars": "off",
+    "no-redeclare": "error",
     "indent": ["error", 2, { "SwitchCase": 1 }],
     "semi": "off",
     "no-case-declarations": "off",
     "prefer-spread": "off",
+    "quotes": ["error", "single"],
     "@typescript-eslint/no-unused-vars": [
       "error",
       {
         "vars": "all",
         "varsIgnorePattern": "^_",
-        "args": "none"
+        "args": "all",
+        "argsIgnorePattern": "^_"
       }
     ],
     "@typescript-eslint/ban-types": [
@@ -91,5 +93,6 @@
   "parserOptions": {
     "sourceType": "module",
     "ecmaVersion": 2015
-  }
+  },
+  "ignorePatterns": ["build/", "node_modules/"]
 }
