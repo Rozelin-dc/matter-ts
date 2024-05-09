@@ -32,8 +32,8 @@ const examples: MatterToolsTypes.Demo.IDemoExample[] = Matter.Common.keys(
       'https://github.com/Rozelin-dc/matter-ts/blob/main/examples/' +
       id +
       '.js',
-    name: Examples[id as keyof typeof Examples].title,
-    init: Examples[id as keyof typeof Examples],
+    name: Examples[id].title,
+    init: Examples[id].init,
     instance: null,
   }
 })
