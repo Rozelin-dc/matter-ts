@@ -2045,7 +2045,7 @@ export default class Render {
    * @param canvas
    * @return pixel ratio
    */
-  protected static _getPixelRatio(canvas: HTMLCanvasElement): number {
+  protected static _getPixelRatio(_canvas?: HTMLCanvasElement): number {
     const devicePixelRatio = window.devicePixelRatio || 1
     const backingStorePixelRatio = 1
 

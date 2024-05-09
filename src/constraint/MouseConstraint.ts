@@ -1,7 +1,7 @@
 import { IBody } from '../body/Body'
 import Composite from '../body/Composite'
 import Detector, { ICollisionFilter } from '../collision/Detector'
-import Common from '../core/Common'
+import Common, { DeepPartial } from '../core/Common'
 import { IEngine } from '../core/Engine'
 import Events, { MouseEventFunction, MouseEventName } from '../core/Events'
 import Mouse, { IMouse } from '../core/Mouse'
@@ -63,7 +63,9 @@ export default class MouseConstraint {
    */
   public static create(
     engine: IEngine,
-    options: Partial<IMouseConstraint>
+    options: Partial<Omit<IMouseConstraint, 'constraint'>> & {
+      constraint?: DeepPartial<IConstraint>
+    }
   ): IMouseConstraint {
     let mouse =
       (engine ? engine.mouse ?? null : null) || (options ? options.mouse : null)
@@ -105,7 +107,7 @@ export default class MouseConstraint {
         mask: 0xffffffff,
         group: 0,
       },
-      events: {} as IMouseConstraint['events']
+      events: {} as IMouseConstraint['events'],
     }
 
     const mouseConstraint = Common.extend(defaults, options)

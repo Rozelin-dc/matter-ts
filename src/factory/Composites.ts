@@ -100,7 +100,7 @@ export default class Composites {
     yOffsetA: number,
     xOffsetB: number,
     yOffsetB: number,
-    options?: Partial<IConstraint>
+    options?: DeepPartial<IConstraint>
   ): IComposite {
     const bodies = composite.bodies
 

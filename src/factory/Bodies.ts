@@ -1,8 +1,8 @@
 import Body, { IBody, IBodyTextRender } from '../body/Body'
 import Common, { DeepPartial } from '../core/Common'
 import Bounds from '../geometry/Bounds'
-import Vector from '../geometry/Vector'
-import Vertices, { IVertices } from '../geometry/Vertices'
+import Vector, { IVector } from '../geometry/Vector'
+import Vertices from '../geometry/Vertices'
 
 /**
  * The `Matter.Bodies` module contains factory methods for creating rigid body models
@@ -240,7 +240,7 @@ export default class Bodies {
     y: number,
     text: string,
     options: DeepPartial<Omit<IBody, 'render'>> & {
-      render?: Partial<IBodyTextRender>
+      render?: DeepPartial<IBodyTextRender>
     } = {}
   ): IBody {
     const defaultTextRender: IBodyTextRender['text'] = {
@@ -343,7 +343,7 @@ export default class Bodies {
   public static fromVertices(
     x: number,
     y: number,
-    vertexSets: IVertices | IVertices[],
+    vertexSets: IVector[] | IVector[][],
     options: DeepPartial<IBody> = {},
     flagInternal: boolean = false,
     removeCollinear: number = 0.01,
@@ -354,20 +354,21 @@ export default class Bodies {
     // check decomp is as expected
     const canDecomp = Boolean(decomp && decomp.quickDecomp)
 
-    const parts: Pick<IBody, 'position' | 'vertices'>[] = []
+    const parts: { position: IVector; vertices: IVector[] }[] = []
 
     // ensure vertexSets is an array of arrays
     if (!Common.isArray(vertexSets[0])) {
-      vertexSets = [vertexSets as IVertices]
+      vertexSets = [vertexSets as IVector[]]
     }
 
     for (let v = 0; v < vertexSets.length; v += 1) {
-      let vertices = (vertexSets as IVertices[])[v]
+      let vertices = (vertexSets as IVector[][])[v]
       const isConvex = Vertices.isConvex(vertices)
       const isConcave = !isConvex
 
       if (isConcave && !canDecomp) {
         Common.warnOnce(
+          // eslint-disable-next-line quotes
           "Bodies.fromVertices: Install the 'poly-decomp' library and use Common.setDecomp or provide 'decomp' as a global to decompose concave vertices."
         )
       }
@@ -410,10 +411,10 @@ export default class Bodies {
 
         // for each decomposed chunk
         for (let i = 0; i < decomposed.length; i++) {
-          const chunk = decomposed[i]
+          const chunk: [number, number][] = decomposed[i]
 
           // convert vertices into the correct structure
-          const chunkVertices = chunk.map((vertices: IVertices) => {
+          const chunkVertices: IVector[] = chunk.map((vertices) => {
             return {
               x: vertices[0],
               y: vertices[1],
