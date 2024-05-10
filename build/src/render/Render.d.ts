@@ -523,7 +523,7 @@ export default class Render {
      * @param canvas
      * @return pixel ratio
      */
-    protected static _getPixelRatio(canvas: HTMLCanvasElement): number;
+    protected static _getPixelRatio(_canvas?: HTMLCanvasElement): number;
     /**
      * Gets the requested texture (an Image) via its path
      * @method _getTexture

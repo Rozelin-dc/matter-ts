@@ -1,6 +1,6 @@
 import { IBody, IBodyTextRender } from '../body/Body';
 import { DeepPartial } from '../core/Common';
-import { IVertices } from '../geometry/Vertices';
+import { IVector } from '../geometry/Vector';
 /**
  * The `Matter.Bodies` module contains factory methods for creating rigid body models
  * with commonly used body configurations (such as rectangles, circles and other polygons).
@@ -72,7 +72,7 @@ export default class Bodies {
      * @return A new rectangle body with the given text
      */
     static text(x: number, y: number, text: string, options?: DeepPartial<Omit<IBody, 'render'>> & {
-        render?: Partial<IBodyTextRender>;
+        render?: DeepPartial<IBodyTextRender>;
     }): IBody;
     /**
      * Measure max text width for a given font.
@@ -115,5 +115,5 @@ export default class Bodies {
      * @param minimumArea Threshold when removing small parts.
      * @param removeDuplicatePoints Threshold when simplifying nearby vertices.
      */
-    static fromVertices(x: number, y: number, vertexSets: IVertices | IVertices[], options?: DeepPartial<IBody>, flagInternal?: boolean, removeCollinear?: number, minimumArea?: number, removeDuplicatePoints?: number): IBody;
+    static fromVertices(x: number, y: number, vertexSets: IVector[] | IVector[][], options?: DeepPartial<IBody>, flagInternal?: boolean, removeCollinear?: number, minimumArea?: number, removeDuplicatePoints?: number): IBody;
 }

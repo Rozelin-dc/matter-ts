@@ -1,7 +1,7 @@
 import { IBody } from '../body/Body';
 import { IAxes } from '../geometry/Axes';
 import { IVector } from '../geometry/Vector';
-import { IVertices } from '../geometry/Vertices';
+import { IVertex } from '../geometry/Vertices';
 import { IPair } from './Pair';
 import { IPairs } from './Pairs';
 export interface ICollision {
@@ -16,7 +16,7 @@ export interface ICollision {
     normal: IVector;
     tangent: IVector;
     penetration: IVector;
-    supports: IVertices;
+    supports: IVertex[];
 }
 interface IOverlap {
     overlap: number;
@@ -30,7 +30,7 @@ interface IOverlap {
  * See `Matter.Engine` for collision events.
  */
 export default class Collision {
-    protected static _supports: IVertices;
+    protected static _supports: IVertex[];
     protected static _overlapAB: IOverlap;
     protected static _overlapBA: IOverlap;
     /**
@@ -58,7 +58,7 @@ export default class Collision {
      * @param verticesB
      * @param axes
      */
-    protected static _overlapAxes(result: IOverlap, verticesA: IVertices, verticesB: IVertices, axes: IAxes): void;
+    protected static _overlapAxes(result: IOverlap, verticesA: IVertex[], verticesB: IVertex[], axes: IAxes): void;
     /**
      * Projects vertices on an axis and returns an interval.
      * @method _projectToAxis
@@ -69,7 +69,7 @@ export default class Collision {
     protected static _projectToAxis(projection: {
         min: number;
         max: number;
-    }, vertices: IVertices, axis: IVector): void;
+    }, vertices: IVertex[], axis: IVector): void;
     /**
      * Finds supporting vertices given two bodies along a given direction using hill-climbing.
      * @method _findSupports
@@ -78,6 +78,6 @@ export default class Collision {
      * @param normal
      * @param direction
      */
-    protected static _findSupports(bodyA: IBody, bodyB: IBody, normal: IVector, direction: number): IVertices;
+    protected static _findSupports(bodyA: IBody, bodyB: IBody, normal: IVector, direction: number): IVertex[];
 }
 export {};

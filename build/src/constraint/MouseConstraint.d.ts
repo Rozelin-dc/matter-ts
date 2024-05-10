@@ -1,5 +1,6 @@
 import { IBody } from '../body/Body';
 import { ICollisionFilter } from '../collision/Detector';
+import { DeepPartial } from '../core/Common';
 import { IEngine } from '../core/Engine';
 import { MouseEventFunction, MouseEventName } from '../core/Events';
 import { IMouse } from '../core/Mouse';
@@ -48,7 +49,9 @@ export default class MouseConstraint {
      * @param options
      * @return A new MouseConstraint
      */
-    static create(engine: IEngine, options: Partial<IMouseConstraint>): IMouseConstraint;
+    static create(engine: IEngine, options: Partial<Omit<IMouseConstraint, 'constraint'>> & {
+        constraint?: DeepPartial<IConstraint>;
+    }): IMouseConstraint;
     /**
      * Updates the given mouse constraint.
      * @method update

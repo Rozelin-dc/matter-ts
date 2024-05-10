@@ -34,7 +34,7 @@ export default class Composites {
      * @param options
      * @return A new composite containing objects chained together with constraints
      */
-    static chain(composite: IComposite, xOffsetA: number, yOffsetA: number, xOffsetB: number, yOffsetB: number, options?: Partial<IConstraint>): IComposite;
+    static chain(composite: IComposite, xOffsetA: number, yOffsetA: number, xOffsetB: number, yOffsetB: number, options?: DeepPartial<IConstraint>): IComposite;
     /**
      * Connects bodies in the composite with constraints in a grid pattern, with optional cross braces.
      * @method mesh

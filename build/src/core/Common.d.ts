@@ -1,4 +1,4 @@
-export type DeepPartial<T> = T extends object ? {
+export type DeepPartial<T> = T extends object ? T extends any[] ? T : {
     [P in keyof T]?: DeepPartial<T[P]>;
 } : T;
 /**
@@ -76,7 +76,7 @@ export default class Common {
      * @param obj
      * @return True if the object is an array, otherwise false
      */
-    static isArray(obj: unknown): obj is any[];
+    static isArray<T>(obj: T | T[]): obj is T[];
     /**
      * Returns true if the object is an Object.
      * @method isObject
@@ -97,7 +97,7 @@ export default class Common {
      * @param obj
      * @return keys
      */
-    static keys(obj: Record<string, unknown>): string[];
+    static keys<T extends ObjectLike>(obj: T): (keyof T)[];
     /**
      * Returns the list of values for the given object.
      * @method values
@@ -113,7 +113,7 @@ export default class Common {
      * @param end Path slice end
      * @return The object at the given path
      */
-    static get<T extends Record<string, any>>(obj: T, path: string, begin?: number, end?: number): T;
+    static get<T extends ObjectLike>(obj: T, path: string, begin?: number, end?: number): T;
     /**
      * Sets a value on `base` relative to the given `path` string.
      * @param obj The base object
@@ -123,7 +123,7 @@ export default class Common {
      * @param end Path slice end
      * @return Pass through `val` for chaining
      */
-    static set<T extends Record<string, any>>(obj: T, path: string, val: T[keyof T], begin?: number, end?: number): T[keyof T];
+    static set<T>(obj: ObjectLike<T>, path: string, val: T, begin?: number, end?: number): T;
     /**
      * Extends the object in the first argument using the object in the second argument.
      * @param obj
@@ -199,7 +199,7 @@ export default class Common {
      * @param func The function to chain before the original
      * @return The chained function that replaced the original
      */
-    static chainPathBefore<T extends Record<string, any>>(base: T, path: string, func: Function): Function;
+    static chainPathBefore<T extends ObjectLike>(base: T, path: string, func: Function): Function;
     /**
      * Chains a function to excute after the original function on the given `path` relative to `base`.
      * See also docs for `Common.chain`.
