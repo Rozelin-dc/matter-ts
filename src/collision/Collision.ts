@@ -1,7 +1,7 @@
 import { IBody } from '../body/Body'
 import { IAxes } from '../geometry/Axes'
 import { IVector } from '../geometry/Vector'
-import Vertices, { IVertex, IVertices } from '../geometry/Vertices'
+import Vertices, { IVertex } from '../geometry/Vertices'
 import Pair, { IPair } from './Pair'
 import { IPairs } from './Pairs'
 
@@ -17,7 +17,7 @@ export interface ICollision {
   normal: IVector
   tangent: IVector
   penetration: IVector
-  supports: IVertices
+  supports: IVertex[]
 }
 
 interface IOverlap {
@@ -33,7 +33,7 @@ interface IOverlap {
  * See `Matter.Engine` for collision events.
  */
 export default class Collision {
-  protected static _supports: IVertices = []
+  protected static _supports: IVertex[] = []
 
   protected static _overlapAB: IOverlap = {
     overlap: 0,
@@ -202,8 +202,8 @@ export default class Collision {
    */
   protected static _overlapAxes(
     result: IOverlap,
-    verticesA: IVertices,
-    verticesB: IVertices,
+    verticesA: IVertex[],
+    verticesB: IVertex[],
     axes: IAxes
   ): void {
     const verticesALength = verticesA.length
@@ -273,7 +273,7 @@ export default class Collision {
    */
   protected static _projectToAxis(
     projection: { min: number; max: number },
-    vertices: IVertices,
+    vertices: IVertex[],
     axis: IVector
   ): void {
     let min = vertices[0].x * axis.x + vertices[0].y * axis.y
@@ -306,7 +306,7 @@ export default class Collision {
     bodyB: IBody,
     normal: IVector,
     direction: number
-  ): IVertices {
+  ): IVertex[] {
     const vertices = bodyB.vertices
     const verticesLength = vertices.length
     const bodyAPositionX = bodyA.position.x

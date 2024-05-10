@@ -8,8 +8,6 @@ export interface IVertex extends IVector {
   isInternal: boolean
 }
 
-export type IVertices = IVertex[]
-
 /**
  * The `Matter.Vertices` module contains methods for creating and manipulating sets of vertices.
  * A set of vertices is an array of `Matter.Vector` with additional indexing properties inserted by `Vertices.create`.
@@ -35,8 +33,8 @@ export default class Vertices {
    * @param points
    * @param body
    */
-  public static create(points: IVector[], body?: IBody): IVertices {
-    const vertices: IVertices = []
+  public static create(points: IVector[], body?: IBody): IVertex[] {
+    const vertices: IVertex[] = []
 
     for (let i = 0; i < points.length; i++) {
       const point = points[i]
@@ -63,7 +61,7 @@ export default class Vertices {
    * @param body
    * @return vertices
    */
-  public static fromPath(path: string, body?: IBody): IVertices {
+  public static fromPath(path: string, body?: IBody): IVertex[] {
     const pathPattern = /L?\s*([-\d.e]+)[\s,]*([-\d.e]+)*/gi
     const points: IVector[] = []
 
@@ -81,7 +79,7 @@ export default class Vertices {
    * @param vertices
    * @return The centre point
    */
-  public static centre(vertices: IVertices): IVector {
+  public static centre(vertices: IVector[]): IVector {
     const area = Vertices.area(vertices, true)
     let centre = Vector.create(0, 0)
 
@@ -101,7 +99,7 @@ export default class Vertices {
    * @param vertices
    * @return The average point
    */
-  public static mean(vertices: IVertices): IVector {
+  public static mean(vertices: (IVector | IVertex)[]): IVector {
     const average = Vector.create(0, 0)
 
     for (const vertex of vertices) {
@@ -119,7 +117,7 @@ export default class Vertices {
    * @param signed
    * @return The area
    */
-  public static area(vertices: IVertices, signed?: boolean): number {
+  public static area(vertices: IVector[], signed?: boolean): number {
     let area = 0
     let j = vertices.length - 1
 
@@ -142,7 +140,7 @@ export default class Vertices {
    * @param mass
    * @return  The polygon's moment of inertia
    */
-  public static inertia(vertices: IVertices, mass: number): number {
+  public static inertia(vertices: (IVector | IVertex)[], mass: number): number {
     let numerator = 0
     let denominator = 0
 
@@ -169,11 +167,11 @@ export default class Vertices {
    * @param vector
    * @param scalar
    */
-  public static translate(
-    vertices: IVertices,
+  public static translate<T extends IVector | IVertex>(
+    vertices: T[],
     vector: IVector,
     scalar: number = 1
-  ): IVertices {
+  ): T[] {
     const translateX = vector.x * scalar
     const translateY = vector.y * scalar
 
@@ -192,11 +190,11 @@ export default class Vertices {
    * @param angle
    * @param point
    */
-  public static rotate(
-    vertices: IVertices,
+  public static rotate<T extends IVector | IVertex>(
+    vertices: T[],
     angle: number,
     point: IVector
-  ): IVertices | void {
+  ): T[] | void {
     if (angle === 0) {
       return
     }
@@ -221,9 +219,9 @@ export default class Vertices {
    * @param point
    * @return True if the vertices contains point, otherwise false
    */
-  public static contains(vertices: IVertices, point: IVector): boolean {
+  public static contains(vertices: IVector[], point: IVector): boolean {
     let vertex = vertices[vertices.length - 1]
-    let nextVertex: IVertex
+    let nextVertex: IVector
 
     for (let i = 0; i < vertices.length; i++) {
       nextVertex = vertices[i]
@@ -249,12 +247,12 @@ export default class Vertices {
    * @param scaleY
    * @param point
    */
-  public static scale(
-    vertices: IVertices,
+  public static scale<T extends IVector | IVertex>(
+    vertices: T[],
     scaleX: number,
     scaleY: number,
     point: IVector = Vertices.centre(vertices)
-  ): IVertices {
+  ): T[] {
     if (scaleX === 1 && scaleY === 1) {
       return vertices
     }
@@ -279,18 +277,18 @@ export default class Vertices {
    * @param qualityMin
    * @param qualityMax
    */
-  public static chamfer(
-    vertices: IVertices,
+  public static chamfer<T extends IVector | IVertex>(
+    vertices: T[],
     radius: number[] | number = [8],
     quality: number = -1,
     qualityMin: number = 2,
     qualityMax: number = 14
-  ): IVertices {
+  ): T[] {
     if (typeof radius === 'number') {
       radius = [radius]
     }
 
-    const newVertices: IVertices = []
+    const newVertices: T[] = []
 
     for (let i = 0; i < vertices.length; i++) {
       const prevVertex = vertices[i - 1 >= 0 ? i - 1 : vertices.length - 1]
@@ -354,7 +352,7 @@ export default class Vertices {
    * @param vertices
    * @return vertices
    */
-  public static clockwiseSort(vertices: IVertices): IVertices {
+  public static clockwiseSort<T extends IVector | IVertex>(vertices: T[]): T[] {
     const centre = Vertices.mean(vertices)
 
     vertices.sort(function (vertexA, vertexB) {
@@ -370,7 +368,7 @@ export default class Vertices {
    * @param vertices
    * @return `true` if the `vertices` are convex, `false` if not (or `null` if not computable).
    */
-  public static isConvex(vertices: IVertices): boolean | null {
+  public static isConvex(vertices: (IVector | IVertex)[]): boolean | null {
     // http://paulbourke.net/geometry/polygonmesh/
     // Copyright (c) Paul Bourke (use permitted)
     let flag = 0
@@ -409,10 +407,10 @@ export default class Vertices {
    * @param vertices
    * @return vertices
    */
-  public static hull(vertices: IVertices): IVertices {
+  public static hull<T extends IVector | IVertex>(vertices: T[]): T[] {
     // http://geomalgorithms.com/a10-_hull-1.html
-    const upper: IVertices = []
-    const lower: IVertices = []
+    const upper: T[] = []
+    const lower: T[] = []
 
     // sort vertices on x-axis (y-axis for ties)
     vertices = vertices.slice(0)

@@ -37,6 +37,7 @@ jobs:
         run: echo VERSION=$(echo ${GITHUB_REF:10}) >> $GITHUB_ENV
       - run: npm version ${{ env.VERSION }}
       - run: npm run build
+      - run: rm -rf build/docs && rm -rf build/examples
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

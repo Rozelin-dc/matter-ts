@@ -1,5 +1,4 @@
 import Vector, { IVector } from './Vector'
-import { IVertices } from './Vertices'
 
 export type IAxes = IVector[]
 
@@ -13,7 +12,7 @@ export default class Axes {
    * @param vertices
    * @return A new axes from the given vertices
    */
-  public static fromVertices(vertices: IVertices): IAxes {
+  public static fromVertices(vertices: IVector[]): IAxes {
     const axes: Record<string, IVector> = {}
 
     // find the unique axes, using edge normal gradients

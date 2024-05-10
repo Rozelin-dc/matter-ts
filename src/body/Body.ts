@@ -3,7 +3,7 @@ import Bounds, { IBounds } from '../geometry/Bounds'
 import Vector, { IVector } from '../geometry/Vector'
 import Axes, { IAxes } from '../geometry/Axes'
 import { IPlugin } from '../core/Plugin'
-import Vertices, { IVertices } from '../geometry/Vertices'
+import Vertices, { IVertex } from '../geometry/Vertices'
 import { ICollisionFilter } from '../collision/Detector'
 import { IRegion } from '../collision/Grid'
 import Common, { CustomPartial, DeepPartial } from '../core/Common'
@@ -274,7 +274,7 @@ export interface IBody {
    * Concave hulls are not currently supported. The module `Matter.Vertices` contains useful methods for working with vertices.
    *
    */
-  vertices: IVertices
+  vertices: IVertex[]
 
   /**
    * An array of bodies that make up this body.
@@ -470,7 +470,7 @@ export interface IBodyTextRender extends IBodyCommonRender {
 }
 
 interface IBodyChamfer {
-  radius: number
+  radius: number | number[]
   quality: number
   qualityMin: number
   qualityMax: number
@@ -743,7 +743,7 @@ export default class Body {
         Body.setInertia(body, value as number)
         break
       case 'vertices':
-        Body.setVertices(body, value as IVertices)
+        Body.setVertices(body, value as IVertex[])
         break
       case 'position':
         Body.setPosition(body, value as IVector)
@@ -874,7 +874,7 @@ export default class Body {
    * @param body
    * @param vertices
    */
-  public static setVertices(body: IBody, vertices: IVertices): void {
+  public static setVertices(body: IBody, vertices: IVertex[]): void {
     // change vertices
     if (vertices[0].body === body) {
       body.vertices = vertices
@@ -943,7 +943,7 @@ export default class Body {
 
     // find the convex hull of all parts to set on the parent body
     if (autoHull) {
-      let vertices: IVertices = []
+      let vertices: IVertex[] = []
       for (const part of parts) {
         vertices = vertices.concat(part.vertices)
       }

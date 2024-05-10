@@ -1,7 +1,10 @@
 export type DeepPartial<T> = T extends object
-  ? {
-      [P in keyof T]?: DeepPartial<T[P]>
-    }
+  ? // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    T extends any[]
+    ? T
+    : {
+        [P in keyof T]?: DeepPartial<T[P]>
+      }
   : T
 
 /**
@@ -163,7 +166,7 @@ export default class Common {
    * @return True if the object is an array, otherwise false
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public static isArray(obj: unknown): obj is any[] {
+  public static isArray<T>(obj: T | T[]): obj is T[] {
     return Object.prototype.toString.call(obj) === '[object Array]'
   }
 
@@ -198,13 +201,13 @@ export default class Common {
    * @param obj
    * @return keys
    */
-  public static keys(obj: Record<string, unknown>): string[] {
+  public static keys<T extends ObjectLike>(obj: T): (keyof T)[] {
     if (Object.keys) {
       return Object.keys(obj)
     }
 
     // avoid hasOwnProperty for performance
-    const keys: string[] = []
+    const keys: (keyof T)[] = []
     for (const key in obj) {
       keys.push(key)
     }
@@ -243,8 +246,7 @@ export default class Common {
    * @param end Path slice end
    * @return The object at the given path
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public static get<T extends Record<string, any>>(
+  public static get<T extends ObjectLike>(
     obj: T,
     path: string,
     begin?: number,
@@ -266,16 +268,15 @@ export default class Common {
    * @param end Path slice end
    * @return Pass through `val` for chaining
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public static set<T extends Record<string, any>>(
-    obj: T,
+  public static set<T>(
+    obj: ObjectLike<T>,
     path: string,
-    val: T[keyof T],
+    val: T,
     begin?: number,
     end?: number
-  ): T[keyof T] {
+  ): T {
     const parts = path.split('.').slice(begin, end)
-    Common.get(obj, path, 0, -1)[parts[parts.length - 1] as keyof T] = val
+    Common.get(obj, path, 0, -1)[parts[parts.length - 1]] = val
     return val
   }
 
@@ -536,8 +537,7 @@ export default class Common {
    * @param func The function to chain before the original
    * @return The chained function that replaced the original
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public static chainPathBefore<T extends Record<string, any>>(
+  public static chainPathBefore<T extends ObjectLike>(
     base: T,
     path: string,
     func: Function
