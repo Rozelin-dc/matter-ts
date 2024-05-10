@@ -1,5 +1,4 @@
 import { IVector } from './Vector';
-import { IVertices } from './Vertices';
 export type IAxes = IVector[];
 /**
  * The `Matter.Axes` module contains methods for creating and manipulating sets of axes.
@@ -11,7 +10,7 @@ export default class Axes {
      * @param vertices
      * @return A new axes from the given vertices
      */
-    static fromVertices(vertices: IVertices): IAxes;
+    static fromVertices(vertices: IVector[]): IAxes;
     /**
      * Rotates a set of axes by the given angle.
      * @method rotate

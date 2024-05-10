@@ -3,7 +3,7 @@ import { IBounds } from '../geometry/Bounds';
 import { IVector } from '../geometry/Vector';
 import { IAxes } from '../geometry/Axes';
 import { IPlugin } from '../core/Plugin';
-import { IVertices } from '../geometry/Vertices';
+import { IVertex } from '../geometry/Vertices';
 import { ICollisionFilter } from '../collision/Detector';
 import { IRegion } from '../collision/Grid';
 import { CustomPartial, DeepPartial } from '../core/Common';
@@ -242,7 +242,7 @@ export interface IBody {
      * Concave hulls are not currently supported. The module `Matter.Vertices` contains useful methods for working with vertices.
      *
      */
-    vertices: IVertices;
+    vertices: IVertex[];
     /**
      * An array of bodies that make up this body.
      * The first body in the array must always be a self reference to the current body instance.
@@ -404,7 +404,7 @@ export interface IBodyTextRender extends IBodyCommonRender {
     };
 }
 interface IBodyChamfer {
-    radius: number;
+    radius: number | number[];
     quality: number;
     qualityMin: number;
     qualityMax: number;
@@ -519,7 +519,7 @@ export default class Body {
      * @param body
      * @param vertices
      */
-    static setVertices(body: IBody, vertices: IVertices): void;
+    static setVertices(body: IBody, vertices: IVertex[]): void;
     /**
      * Sets the parts of the `body`.
      *

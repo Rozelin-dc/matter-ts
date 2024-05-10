@@ -5,7 +5,6 @@ export interface IVertex extends IVector {
     body?: IBody;
     isInternal: boolean;
 }
-export type IVertices = IVertex[];
 /**
  * The `Matter.Vertices` module contains methods for creating and manipulating sets of vertices.
  * A set of vertices is an array of `Matter.Vector` with additional indexing properties inserted by `Vertices.create`.
@@ -31,7 +30,7 @@ export default class Vertices {
      * @param points
      * @param body
      */
-    static create(points: IVector[], body?: IBody): IVertices;
+    static create(points: IVector[], body?: IBody): IVertex[];
     /**
      * Parses a string containing ordered x y pairs separated by spaces (and optionally commas),
      * into a `Matter.Vertices` object for the given `Matter.Body`.
@@ -41,21 +40,21 @@ export default class Vertices {
      * @param body
      * @return vertices
      */
-    static fromPath(path: string, body?: IBody): IVertices;
+    static fromPath(path: string, body?: IBody): IVertex[];
     /**
      * Returns the centre (centroid) of the set of vertices.
      * @method centre
      * @param vertices
      * @return The centre point
      */
-    static centre(vertices: IVertices): IVector;
+    static centre(vertices: IVector[]): IVector;
     /**
      * Returns the average (mean) of the set of vertices.
      * @method mean
      * @param vertices
      * @return The average point
      */
-    static mean(vertices: IVertices): IVector;
+    static mean(vertices: (IVector | IVertex)[]): IVector;
     /**
      * Returns the area of the set of vertices.
      * @method area
@@ -63,7 +62,7 @@ export default class Vertices {
      * @param signed
      * @return The area
      */
-    static area(vertices: IVertices, signed?: boolean): number;
+    static area(vertices: IVector[], signed?: boolean): number;
     /**
      * Returns the moment of inertia (second moment of area) of the set of vertices given the total mass.
      * @method inertia
@@ -71,7 +70,7 @@ export default class Vertices {
      * @param mass
      * @return  The polygon's moment of inertia
      */
-    static inertia(vertices: IVertices, mass: number): number;
+    static inertia(vertices: (IVector | IVertex)[], mass: number): number;
     /**
      * Translates the set of vertices in-place.
      * @method translate
@@ -79,7 +78,7 @@ export default class Vertices {
      * @param vector
      * @param scalar
      */
-    static translate(vertices: IVertices, vector: IVector, scalar?: number): IVertices;
+    static translate<T extends IVector | IVertex>(vertices: T[], vector: IVector, scalar?: number): T[];
     /**
      * Rotates the set of vertices in-place.
      * @method rotate
@@ -87,7 +86,7 @@ export default class Vertices {
      * @param angle
      * @param point
      */
-    static rotate(vertices: IVertices, angle: number, point: IVector): IVertices | void;
+    static rotate<T extends IVector | IVertex>(vertices: T[], angle: number, point: IVector): T[] | void;
     /**
      * Returns `true` if the `point` is inside the set of `vertices`.
      * @method contains
@@ -95,7 +94,7 @@ export default class Vertices {
      * @param point
      * @return True if the vertices contains point, otherwise false
      */
-    static contains(vertices: IVertices, point: IVector): boolean;
+    static contains(vertices: IVector[], point: IVector): boolean;
     /**
      * Scales the vertices from a point (default is centre) in-place.
      * @method scale
@@ -104,7 +103,7 @@ export default class Vertices {
      * @param scaleY
      * @param point
      */
-    static scale(vertices: IVertices, scaleX: number, scaleY: number, point?: IVector): IVertices;
+    static scale<T extends IVector | IVertex>(vertices: T[], scaleX: number, scaleY: number, point?: IVector): T[];
     /**
      * Chamfers a set of vertices by giving them rounded corners, returns a new set of vertices.
      * The radius parameter is a single number or an array to specify the radius for each vertex.
@@ -115,26 +114,26 @@ export default class Vertices {
      * @param qualityMin
      * @param qualityMax
      */
-    static chamfer(vertices: IVertices, radius?: number[] | number, quality?: number, qualityMin?: number, qualityMax?: number): IVertices;
+    static chamfer<T extends IVector | IVertex>(vertices: T[], radius?: number[] | number, quality?: number, qualityMin?: number, qualityMax?: number): T[];
     /**
      * Sorts the input vertices into clockwise order in place.
      * @method clockwiseSort
      * @param vertices
      * @return vertices
      */
-    static clockwiseSort(vertices: IVertices): IVertices;
+    static clockwiseSort<T extends IVector | IVertex>(vertices: T[]): T[];
     /**
      * Returns true if the vertices form a convex shape (vertices must be in clockwise order).
      * @method isConvex
      * @param vertices
      * @return `true` if the `vertices` are convex, `false` if not (or `null` if not computable).
      */
-    static isConvex(vertices: IVertices): boolean | null;
+    static isConvex(vertices: (IVector | IVertex)[]): boolean | null;
     /**
      * Returns the convex hull of the input vertices as a new array of points.
      * @method hull
      * @param vertices
      * @return vertices
      */
-    static hull(vertices: IVertices): IVertices;
+    static hull<T extends IVector | IVertex>(vertices: T[]): T[];
 }

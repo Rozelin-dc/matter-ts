@@ -1,5 +1,5 @@
 /*!
- * @rozelin/matter-ts 1.1.4 by @Rozelin
+ * @rozelin/matter-ts 1.1.5 by @Rozelin
  * https://rozelin-dc.github.io/matter-ts
  * License MIT
  *
@@ -3313,7 +3313,7 @@ class MouseConstraint {
                 mask: 0xffffffff,
                 group: 0,
             },
-            events: {}
+            events: {},
         };
         const mouseConstraint = Common_1.default.extend(defaults, options);
         Events_1.default.on(engine, 'beforeUpdate', () => {
@@ -3586,7 +3586,6 @@ class Common {
      * @param end Path slice end
      * @return The object at the given path
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static get(obj, path, begin, end) {
         const pathArray = path.split('.').slice(begin, end);
         for (const part of pathArray) {
@@ -3603,7 +3602,6 @@ class Common {
      * @param end Path slice end
      * @return Pass through `val` for chaining
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static set(obj, path, val, begin, end) {
         const parts = path.split('.').slice(begin, end);
         Common.get(obj, path, 0, -1)[parts[parts.length - 1]] = val;
@@ -3795,7 +3793,6 @@ class Common {
      * @param func The function to chain before the original
      * @return The chained function that replaced the original
      */
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     static chainPathBefore(base, path, func) {
         return Common.set(base, path, Common.chain(func, Common.get(base, path)));
     }
@@ -5349,7 +5346,9 @@ class Bodies {
             const isConvex = Vertices_1.default.isConvex(vertices);
             const isConcave = !isConvex;
             if (isConcave && !canDecomp) {
-                Common_1.default.warnOnce("Bodies.fromVertices: Install the 'poly-decomp' library and use Common.setDecomp or provide 'decomp' as a global to decompose concave vertices.");
+                Common_1.default.warnOnce(
+                // eslint-disable-next-line quotes
+                "Bodies.fromVertices: Install the 'poly-decomp' library and use Common.setDecomp or provide 'decomp' as a global to decompose concave vertices.");
             }
             if (isConvex || !canDecomp) {
                 if (isConvex) {
@@ -7618,7 +7617,7 @@ class Render {
                         context.font = `${part.render.text.isBold ? 'bold ' : ''}${part.render.text.size}px ${part.render.text.font}`;
                         context.fillStyle = part.render.text.color;
                         context.textAlign = part.render.text.align;
-                        context.translate(part.position.x + part.render.text.paddingX, part.position.y + part.render.text.paddingY);
+                        context.translate(part.position.x, part.position.y);
                         context.rotate(part.angle);
                         const maxTextWidth = Bodies_1.default.measureMaxTextWidth(part.render.text.content, part.render.text.font, part.render.text.size);
                         let x;
@@ -7644,7 +7643,7 @@ class Render {
                         }
                         // revert translation, hopefully faster than save / restore
                         context.rotate(-part.angle);
-                        context.translate(-part.position.x - part.render.text.paddingX, -part.position.y - part.render.text.paddingY);
+                        context.translate(-part.position.x, -part.position.y);
                     }
                 }
                 context.globalAlpha = 1;
@@ -8156,7 +8155,7 @@ class Render {
      * @param canvas
      * @return pixel ratio
      */
-    static _getPixelRatio(canvas) {
+    static _getPixelRatio(_canvas) {
         const devicePixelRatio = window.devicePixelRatio || 1;
         const backingStorePixelRatio = 1;
         return devicePixelRatio / backingStorePixelRatio;
@@ -8223,7 +8222,7 @@ exports["default"] = Render;
 /***/ 147:
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.1.4","license":"MIT","homepage":"https://rozelin-dc.github.io/matter-ts","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["javascript","typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-tools":"^0.14.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-demo":"webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production","lint":"eslint \\"src/**/*.ts\\"","typedoc":"typedoc --out docs/typedoc src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
+module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.1.5","license":"MIT","homepage":"https://rozelin-dc.github.io/matter-ts","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["javascript","typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@rozelin/matter-tools":"^1.0.2","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-demo":"webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production","lint":"eslint . --ext .ts","typedoc":"typedoc --out docs/typedoc src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
 
 /***/ })
 
