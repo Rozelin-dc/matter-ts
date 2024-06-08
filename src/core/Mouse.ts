@@ -124,7 +124,11 @@ export default class Mouse {
         mouse.sourceEvents.mouseup = event
       },
       mousewheel: (event: WheelEvent) => {
-        mouse.wheelDelta = Math.max(-1, Math.min(1, -event.detail))
+        mouse.wheelDelta = Math.max(
+          -1,
+          // @ts-ignore
+          Math.min(1, event.wheelDelta || -event.detail)
+        )
         event.preventDefault()
         mouse.sourceEvents.mousewheel = event
       },
@@ -136,7 +140,7 @@ export default class Mouse {
   }
 
   public static isTouchEvent(event: MouseEventType): event is TouchEvent {
-    return 'changedTouches' in event
+    return 'changedTouches' in event && !!event.changedTouches
   }
 
   /**
@@ -214,10 +218,8 @@ export default class Mouse {
     const elementBounds = element.getBoundingClientRect()
     const rootNode =
       document.documentElement || document.body.parentNode || document.body
-    const scrollX =
-      window.scrollX !== undefined ? window.scrollX : rootNode.scrollLeft
-    const scrollY =
-      window.scrollY !== undefined ? window.scrollY : rootNode.scrollTop
+    const scrollX = window.scrollX ?? rootNode.scrollLeft
+    const scrollY = window.scrollY ?? rootNode.scrollTop
     let x: number
     let y: number
 
@@ -231,8 +233,14 @@ export default class Mouse {
     }
 
     return Vector.create(
-      x / ((element.clientWidth / element.clientWidth) * pixelRatio),
-      y / ((element.clientHeight / element.clientHeight) * pixelRatio)
+      x /
+        // @ts-ignore
+        ((element.clientWidth / (element.width || element.clientWidth)) *
+          pixelRatio),
+      y /
+        // @ts-ignore
+        ((element.clientHeight / (element.height || element.clientHeight)) *
+          pixelRatio)
     )
   }
 }
