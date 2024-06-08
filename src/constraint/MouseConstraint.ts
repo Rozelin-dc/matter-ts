@@ -68,7 +68,7 @@ export default class MouseConstraint {
     }
   ): IMouseConstraint {
     let mouse =
-      (engine ? engine.mouse ?? null : null) || (options ? options.mouse : null)
+      (engine ? engine.mouse : null) || (options ? options.mouse : null)
 
     if (!mouse) {
       if (engine && engine.render && engine.render.canvas) {

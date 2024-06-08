@@ -5,7 +5,7 @@
     "no-unused-vars": "off",
     "no-redeclare": "error",
     "indent": ["error", 2, { "SwitchCase": 1 }],
-    "semi": "off",
+    "semi": ["error", "never"],
     "no-case-declarations": "off",
     "prefer-spread": "off",
     "quotes": ["error", "single"],
