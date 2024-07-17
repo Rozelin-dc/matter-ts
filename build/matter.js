@@ -1,5 +1,5 @@
 /*!
- * @rozelin/matter-ts 1.1.6 by @Rozelin
+ * @rozelin/matter-ts 1.1.7 by @Rozelin
  * https://rozelin-dc.github.io/matter-ts
  * License MIT
  *
@@ -3275,7 +3275,7 @@ class MouseConstraint {
      * @param options
      * @return A new MouseConstraint
      */
-    static create(engine, options) {
+    static create(engine, options = {}) {
         var _a;
         let mouse = (engine ? engine.mouse : null) || (options ? options.mouse : null);
         if (!mouse) {
@@ -5378,20 +5378,14 @@ class Bodies {
                     return [vertex.x, vertex.y];
                 });
                 // vertices are concave and simple, we can decompose into parts
-                // @ts-ignore
                 decomp.makeCCW(concave);
-                // @ts-ignore
                 if (removeCollinear !== false) {
-                    // @ts-ignore
                     decomp.removeCollinearPoints(concave, removeCollinear);
                 }
-                // @ts-ignore
                 if (removeDuplicatePoints !== false && decomp.removeDuplicatePoints) {
-                    // @ts-ignore
                     decomp.removeDuplicatePoints(concave, removeDuplicatePoints);
                 }
                 // use the quick decomposition algorithm (Bayazit)
-                // @ts-ignore
                 const decomposed = decomp.quickDecomp(concave);
                 // for each decomposed chunk
                 for (let i = 0; i < decomposed.length; i++) {
@@ -5404,8 +5398,9 @@ class Bodies {
                         };
                     });
                     // skip small chunks
-                    if (minimumArea > 0 && Vertices_1.default.area(chunkVertices) < minimumArea)
+                    if (minimumArea > 0 && Vertices_1.default.area(chunkVertices) < minimumArea) {
                         continue;
+                    }
                     // create a compound part
                     parts.push({
                         position: Vertices_1.default.centre(chunkVertices),
@@ -8231,7 +8226,7 @@ exports["default"] = Render;
 /***/ 147:
 /***/ ((module) => {
 
-module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.1.6","license":"MIT","homepage":"https://rozelin-dc.github.io/matter-ts","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["javascript","typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@rozelin/matter-tools":"^1.0.2","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-demo":"webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production","lint":"eslint . --ext .ts","typedoc":"typedoc --out docs/typedoc src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
+module.exports = JSON.parse('{"name":"@rozelin/matter-ts","version":"1.1.7","license":"MIT","homepage":"https://rozelin-dc.github.io/matter-ts","author":"Rozelin <rozelin.dc@gmail.com> (https://github.com/Rozelin-dc)","description":"a 2D rigid body physics engine for the web","main":"build/matter.js","types":"build/src/matter.d.ts","repository":{"type":"git","url":"https://github.com/Rozelin-dc/matter-ts.git"},"keywords":["javascript","typescript","canvas","html5","physics","physics engine","game engine","rigid body physics"],"devDependencies":{"@babel/core":"^7.23.0","@babel/preset-env":"^7.22.20","@babel/preset-typescript":"^7.23.0","@rozelin/matter-tools":"^1.0.2","@typescript-eslint/eslint-plugin":"^7.7.0","@typescript-eslint/parser":"^7.7.0","babel-jest":"^29.7.0","conventional-changelog-cli":"^4.1.0","eslint":"^8.49.0","html-webpack-plugin":"^5.5.3","jest":"^29.7.0","jest-worker":"^29.7.0","json-stringify-pretty-compact":"^4.0.0","matter-wrap":"^0.2.0","mock-require":"^3.0.3","pathseg":"^1.2.1","poly-decomp":"^0.3.0","puppeteer-core":"^21.2.1","terser-webpack-plugin":"^5.3.9","ts-loader":"^9.4.4","typedoc":"^0.25.1","typescript":"^5.2.2","webpack":"^5.88.2","webpack-bundle-analyzer":"^4.9.1","webpack-cli":"^5.1.4","webpack-dev-server":"^4.15.1"},"scripts":{"serve":"webpack-dev-server --no-cache --mode development --config webpack.demo.config.js","watch":"nodemon --watch webpack.demo.config.js --exec \\"npm run serve\\"","build":"webpack --mode=production","build-demo":"webpack --no-cache --no-watch --config webpack.demo.config.js --mode=production","lint":"eslint . --ext .ts","typedoc":"typedoc --out docs/typedoc src/**/*.ts","type-check":"tsc --noEmit","test":"jest"},"files":["src","build"]}');
 
 /***/ })
 

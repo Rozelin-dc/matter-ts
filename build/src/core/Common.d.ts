@@ -40,7 +40,7 @@ export default class Common {
     static now(): number;
     static random(min?: number, max?: number): number;
     protected static _seededRandom(): number;
-    static colorToNumber(colorString: `${'#' | ''}${string}`): number;
+    static colorToNumber(colorString: string): number;
     /**
      * Returns the given value clamped between a minimum and maximum value.
      * @param value

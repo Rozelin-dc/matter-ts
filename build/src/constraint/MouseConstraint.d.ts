@@ -49,7 +49,7 @@ export default class MouseConstraint {
      * @param options
      * @return A new MouseConstraint
      */
-    static create(engine: IEngine, options: Partial<Omit<IMouseConstraint, 'constraint'>> & {
+    static create(engine: IEngine, options?: Partial<Omit<IMouseConstraint, 'constraint'>> & {
         constraint?: DeepPartial<IConstraint>;
     }): IMouseConstraint;
     /**

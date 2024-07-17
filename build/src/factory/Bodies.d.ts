@@ -115,5 +115,5 @@ export default class Bodies {
      * @param minimumArea Threshold when removing small parts.
      * @param removeDuplicatePoints Threshold when simplifying nearby vertices.
      */
-    static fromVertices(x: number, y: number, vertexSets: IVector[] | IVector[][], options?: DeepPartial<IBody>, flagInternal?: boolean, removeCollinear?: number, minimumArea?: number, removeDuplicatePoints?: number): IBody;
+    static fromVertices(x: number, y: number, vertexSets: IVector[] | IVector[][], options?: DeepPartial<IBody>, flagInternal?: boolean, removeCollinear?: number | false, minimumArea?: number, removeDuplicatePoints?: number | false): IBody;
 }
