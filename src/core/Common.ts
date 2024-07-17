@@ -90,7 +90,7 @@ export default class Common {
     return Common._seed / 233280
   }
 
-  public static colorToNumber(colorString: `${'#' | ''}${string}`): number {
+  public static colorToNumber(colorString: string): number {
     let code = colorString.replace('#', '')
 
     if (code.length == 3) {

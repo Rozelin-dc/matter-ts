@@ -262,9 +262,7 @@ export default class Bodies {
     if (!context) {
       throw new Error('Failed to create canvas context')
     }
-    context.font = `${textRender.isBold ? 'bold' : ''} ${textRender.size}px ${
-      textRender.font
-    }`
+    context.font = `${textRender.isBold ? 'bold' : ''} ${textRender.size}px ${textRender.font}`
     context.textAlign = textRender.align
     const textWidth =
       Bodies.measureMaxTextWidth(text, textRender.font, textRender.size) +
@@ -346,9 +344,9 @@ export default class Bodies {
     vertexSets: IVector[] | IVector[][],
     options: DeepPartial<IBody> = {},
     flagInternal: boolean = false,
-    removeCollinear: number = 0.01,
+    removeCollinear: number | false = 0.01,
     minimumArea: number = 10,
-    removeDuplicatePoints: number = 0.01
+    removeDuplicatePoints: number | false = 0.01
   ): IBody {
     const decomp = Common.getDecomp()
     // check decomp is as expected
@@ -392,21 +390,15 @@ export default class Bodies {
         })
 
         // vertices are concave and simple, we can decompose into parts
-        // @ts-ignore
         decomp.makeCCW(concave)
-        // @ts-ignore
         if (removeCollinear !== false) {
-          // @ts-ignore
           decomp.removeCollinearPoints(concave, removeCollinear)
         }
-        // @ts-ignore
         if (removeDuplicatePoints !== false && decomp.removeDuplicatePoints) {
-          // @ts-ignore
           decomp.removeDuplicatePoints(concave, removeDuplicatePoints)
         }
 
         // use the quick decomposition algorithm (Bayazit)
-        // @ts-ignore
         const decomposed = decomp.quickDecomp(concave)
 
         // for each decomposed chunk
@@ -422,8 +414,9 @@ export default class Bodies {
           })
 
           // skip small chunks
-          if (minimumArea > 0 && Vertices.area(chunkVertices) < minimumArea)
+          if (minimumArea > 0 && Vertices.area(chunkVertices) < minimumArea) {
             continue
+          }
 
           // create a compound part
           parts.push({
