@@ -24,7 +24,7 @@ const textBody = {
     Matter.Runner.run(runner, engine)
 
     // add bodies
-    const stack = Matter.Composites.stack(20, 20, 10, 5, 0, 0, function (x, y) {
+    const stack = Matter.Composites.stack(20, 20, 10, 2, 0, 0, function (x, y) {
       const texts = [
         'Hello',
         'World',
@@ -35,13 +35,18 @@ const textBody = {
         'line\nbreak\ntext',
         'line\nbreak\ntext\nsample2',
       ]
-      const colors = [
-        '#FF0000',
-        '#00FF00',
-        '#0000FF',
-        '#FF00FF',
-        '#00FFFF',
-        '#FFFF00',
+      const bodyColors = [
+        '#115718',
+        '#573316',
+        '#060887',
+        '#89068A',
+        '#A1000A'
+      ]
+      const textColors = [
+        '#FFFFFF',
+        '#C6E3FF',
+        '#90FF9F',
+        '#FAA2FF',
       ]
       const aligns: CanvasTextAlign[] = [
         'left',
@@ -52,11 +57,12 @@ const textBody = {
       ]
       return Matter.Bodies.text(x, y, Matter.Common.choose(texts), {
         render: {
+          fillStyle: Matter.Common.choose(bodyColors),
           text: {
-            color: Matter.Common.choose(colors),
+            color: Matter.Common.choose(textColors),
             align: Matter.Common.choose(aligns),
-            paddingX: Matter.Common.random(0, 10),
-            paddingY: Matter.Common.random(0, 10),
+            paddingX: Matter.Common.random(10, 40),
+            paddingY: Matter.Common.random(10, 40),
           },
         },
       })
