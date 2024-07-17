@@ -65,7 +65,7 @@ export default class MouseConstraint {
     engine: IEngine,
     options: Partial<Omit<IMouseConstraint, 'constraint'>> & {
       constraint?: DeepPartial<IConstraint>
-    }
+    } = {}
   ): IMouseConstraint {
     let mouse =
       (engine ? engine.mouse : null) || (options ? options.mouse : null)

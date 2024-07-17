@@ -234,13 +234,13 @@ export default class Mouse {
 
     return Vector.create(
       x /
-        // @ts-ignore
-        ((element.clientWidth / (element.width || element.clientWidth)) *
-          pixelRatio),
+      // @ts-ignore
+      ((element.clientWidth / (element.width || element.clientWidth)) *
+        pixelRatio),
       y /
-        // @ts-ignore
-        ((element.clientHeight / (element.height || element.clientHeight)) *
-          pixelRatio)
+      // @ts-ignore
+      ((element.clientHeight / (element.height || element.clientHeight)) *
+        pixelRatio)
     )
   }
 }
